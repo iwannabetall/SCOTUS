@@ -1,0 +1,254 @@
+var justicedata = [
+  {
+    "justiceName": "AFortas",
+    "President": "LBJ",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 97
+  },
+  {
+    "justiceName": "AJGoldberg",
+    "President": "Kennedy",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 96
+  },
+  {
+    "justiceName": "AMKennedy",
+    "President": "Reagan",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 106
+  },
+  {
+    "justiceName": "AScalia",
+    "President": "Reagan",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 105
+  },
+  {
+    "justiceName": "BRWhite",
+    "President": "Kennedy",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 95
+  },
+  {
+    "justiceName": "CEWhittaker",
+    "President": "Eisenhower",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 93
+  },
+  {
+    "justiceName": "CThomas",
+    "President": "Bush",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 108
+  },
+  {
+    "justiceName": "DHSouter",
+    "President": "Bush",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 107
+  },
+  {
+    "justiceName": "EKagan",
+    "President": "Obama",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 114
+  },
+  {
+    "justiceName": "EWarren",
+    "President": "Eisenhower",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 90
+  },
+  {
+    "justiceName": "FFrankfurter",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "I",
+    "justice": 80
+  },
+  {
+    "justiceName": "FMurphy",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 82
+  },
+  {
+    "justiceName": "FMVinson",
+    "President": "Truman",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 87
+  },
+  {
+    "justiceName": "HABlackmun",
+    "President": "Nixon",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 100
+  },
+  {
+    "justiceName": "HHBurton",
+    "President": "Truman",
+    "PresidentParty": "D",
+    "JusticeParty": "R",
+    "justice": 86
+  },
+  {
+    "justiceName": "HLBlack",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 78
+  },
+  {
+    "justiceName": "JGRoberts",
+    "President": "WBush",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 111
+  },
+  {
+    "justiceName": "JHarlan2",
+    "President": "Eisenhower",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 91
+  },
+  {
+    "justiceName": "JPStevens",
+    "President": "Ford",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 103
+  },
+  {
+    "justiceName": "LFPowell",
+    "President": "Nixon",
+    "PresidentParty": "R",
+    "JusticeParty": "D",
+    "justice": 101
+  },
+  {
+    "justiceName": "PStewart",
+    "President": "Eisenhower",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 94
+  },
+  {
+    "justiceName": "RBGinsburg",
+    "President": "Clinton",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 109
+  },
+  {
+    "justiceName": "RHJackson",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 84
+  },
+  {
+    "justiceName": "SAAlito",
+    "President": "WBush",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 112
+  },
+  {
+    "justiceName": "SDOConnor",
+    "President": "Reagan",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 104
+  },
+  {
+    "justiceName": "SFReed",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 79
+  },
+  {
+    "justiceName": "SGBreyer",
+    "President": "Clinton",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 110
+  },
+  {
+    "justiceName": "SMinton",
+    "President": "Truman",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 89
+  },
+  {
+    "justiceName": "SSotomayor",
+    "President": "Obama",
+    "PresidentParty": "D",
+    "JusticeParty": "I",
+    "justice": 113
+  },
+  {
+    "justiceName": "TCClark",
+    "President": "Truman",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 88
+  },
+  {
+    "justiceName": "TMarshall",
+    "President": "LBJ",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 98
+  },
+  {
+    "justiceName": "WBRutledge",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 85
+  },
+  {
+    "justiceName": "WEBurger",
+    "President": "Nixon",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 99
+  },
+  {
+    "justiceName": "WHRehnquist",
+    "President": "Nixon",
+    "PresidentParty": "R",
+    "JusticeParty": "R",
+    "justice": 102
+  },
+  {
+    "justiceName": "WJBrennan",
+    "President": "Eisenhower",
+    "PresidentParty": "R",
+    "JusticeParty": "D",
+    "justice": 92
+  },
+  {
+    "justiceName": "WODouglas",
+    "President": "FDR",
+    "PresidentParty": "D",
+    "JusticeParty": "D",
+    "justice": 81
+  }
+]

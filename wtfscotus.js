@@ -1,6 +1,7 @@
 var initialCategory = "Criminal Procedure";
 var initialYear = 2015; 
 
+//data
 var justicedata = justicedata;
 var aggdataset = scotus;
 var dataset = scotus_byissue;
@@ -13,7 +14,7 @@ function getChecked(){
 	
 	for (i=0; i < yearboxes.length; i++){
 		if (yearboxes[i].checked){
-			selectedYear.push(yearboxes[i].value)	;
+			selectedYear.push(parseInt(yearboxes[i].value))	;
 		}		
 	}
 
@@ -28,16 +29,15 @@ function processData() {
 	var checked = getChecked();
 	var ChosenYear = checked.year;
 	var ChosenCategory = checked.category;
-	// console.log(ChosenCategory)
-	// console.log(ChosenYear)
 	//filter data for years selected
-	scdata_year = dataset.filter(function(d) {
-		for (var i = 0; i < ChosenYear.length; i++){
-			counter += 1;
-			return d.Year == ChosenYear[i];
+
+	var scdata_year = dataset.filter(function(d) { 
+		//if match with year, pull out the entire data 
+		if (ChosenYear.indexOf(d.Year) >= 0) {
+			return d;
 		}
+
 	});
-	console.log(counter)
 
 		//filter data if don't select all, aggregate if do 
 	if (ChosenCategory != "All"){
@@ -69,7 +69,6 @@ function processData() {
 		}
 		scdata_year = newdatabyyear;
 	}
-	// console.log(scdata_year);
 
 	// console.log(scdata_year);
 	initVis(scdata_year, ChosenCategory)
@@ -202,8 +201,6 @@ function initVis(databyyear, ChosenCategory){
 	   		return d
 		})
 
-
-	svg.data(databyyear).exit().remove();
 	// justice labels
 	var J1text = svg.append("g").selectAll("text")
 		.data(J_unique)
@@ -215,7 +212,7 @@ function initVis(databyyear, ChosenCategory){
 		.attr("y", function(d, i) { return 80 + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.text(function(d){ return d});
 
-	J1text.data(J_unique).exit().remove();
+	// J1text.data(J_unique).exit().remove();
 
 	var J2text = svg.append("g")
 		.selectAll("text")
@@ -230,5 +227,6 @@ function initVis(databyyear, ChosenCategory){
 		.attr("transform", "rotate(-90)")
 		.text(function(d){ return d});
 
+	svg.exit().remove();
 
 }

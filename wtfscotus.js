@@ -9,36 +9,55 @@ var dataset = scotus_byissue;
 function getChecked(){
 	
 	var selectedCategory = document.getElementById("filterSelect").value;
-	var selectedYear = []
-	var yearboxes = document.getElementsByClassName("Yearbox");
+	var fromyear = document.getElementsByClassName("irs-from");
+	fromyear = parseInt(fromyear[0].innerHTML);
+
+	var toyear = document.getElementsByClassName("irs-to");
+	toyear = parseInt(toyear[0].innerHTML);
 	
-	for (i=0; i < yearboxes.length; i++){
-		if (yearboxes[i].checked){
-			selectedYear.push(parseInt(yearboxes[i].value))	;
-		}		
-	}
+	// var selectedYear = []
+	// var yearboxes = document.getElementsByClassName("Yearbox");
+	
+	// for (i=0; i < yearboxes.length; i++){
+	// 	if (yearboxes[i].checked){
+	// 		selectedYear.push(parseInt(yearboxes[i].value))	;
+	// 	}		
+	// }
 
-	return { year: selectedYear, category: selectedCategory};
-
+	// return { year: selectedYear, category: selectedCategory};
+	// return selectedCategory;
+	return { startyear: fromyear, endyear: toyear, category: selectedCategory};
 }
 
 
-function processData() {
+function processData(startyear, endyear) {
 
 	var counter = 0
 	var checked = getChecked();
-	var ChosenYear = checked.year;
+	// var ChosenYear = checked.year;
 	var ChosenCategory = checked.category;
+	var startyear = checked.startyear;
+	var endyear = checked.endyear;
+
+	console.log(startyear);
 	//filter data for years selected
+	if (startyear == 0){
+		var checked = getChecked();
+		console.log(checked.startyear);
+	}
 
 	var scdata_year = dataset.filter(function(d) { 
 		//if match with year, pull out the entire data 
-		if (ChosenYear.indexOf(d.Year) >= 0) {
+		// if (ChosenYear.indexOf(d.Year) >= 0) {
+		// 	return d;
+		// }
+		if ((d.Year >= startyear) && (d.Year <= endyear))
+		{				
 			return d;
 		}
 
 	});
-
+	console.log(ChosenCategory);
 		//filter data if don't select all, aggregate if do 
 	if (ChosenCategory != "All"){
 		scdata_year = scdata_year.filter(function(d) {
@@ -70,7 +89,7 @@ function processData() {
 		scdata_year = newdatabyyear;
 	}
 
-	// console.log(scdata_year);
+	console.log(scdata_year);
 	initVis(scdata_year, ChosenCategory)
 }
 
@@ -100,8 +119,8 @@ function initVis(databyyear, ChosenCategory){
 	// console.log(J_unique);
 
 	//Width and height
-	var w = 800;
-	var h = 800;
+	var w = 1000;
+	var h = 1000;
 	var barPadding = 5;
 	var cellsize = 60;
 
@@ -120,6 +139,7 @@ function initVis(databyyear, ChosenCategory){
 	   .data(databyyear)
 	   .enter()
 	   .append("rect")
+	   .attr("class", "colorbox")
 	   .attr("x", function(d, i) {
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		var x_coor = Math.min(J_unique.indexOf(databyyear[i].J1name), J_unique.indexOf(databyyear[i].J2name));
@@ -208,6 +228,7 @@ function initVis(databyyear, ChosenCategory){
 		.append("text");
 
 	J1text
+		.attr("class", "judgelabel")
 		.attr("x", 20 )
 		.attr("y", function(d, i) { return 80 + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.text(function(d){ return d});
@@ -221,6 +242,7 @@ function initVis(databyyear, ChosenCategory){
 			.append("text");
 //wtf is going on with the x and y being swapped -- b/c i transformed? 
 	J2text
+		.attr("class", "judgelabel")
 		.attr("x", -20)
 		.attr("y", function(d, i) {  return 80 + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.style("text-anchor", "end")

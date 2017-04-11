@@ -1,0 +1,6 @@
+.checkboxes {
+      position: absolute; top: 25%; right: 0; width: 15%; height: 45%;      
+      overflow:scroll;
+      background-color: #FFFFFF; 
+      font-family: 'Titillium Web', sans-serif;
+}

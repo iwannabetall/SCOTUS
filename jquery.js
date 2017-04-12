@@ -21,11 +21,11 @@ $(document).ready(function(){
             grid: true,
             prettify_enabled: false,
             onStart: function (data){
-            	//process data with selected years
+            	//process data with selected years -- what happens to function without parameter            	
             	processData(data.from, data.to);
             },
             onFinish: function (data) {
-            	processData();  
+            	processData(data.from, data.to);
             }
         });
 

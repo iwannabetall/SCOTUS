@@ -14,38 +14,12 @@ function wipePage() {
 	}
 }
 
-function getChecked(){
-	
-	var selectedCategory = document.getElementById("filterSelect").value;
-	var fromyear = document.getElementsByClassName("irs-from");
-	fromyear = parseInt(fromyear[0].innerHTML);
-
-	var toyear = document.getElementsByClassName("irs-to");
-	toyear = parseInt(toyear[0].innerHTML);
-	
-	// var selectedYear = []
-	// var yearboxes = document.getElementsByClassName("Yearbox");
-	
-	// for (i=0; i < yearboxes.length; i++){
-	// 	if (yearboxes[i].checked){
-	// 		selectedYear.push(parseInt(yearboxes[i].value))	;
-	// 	}		
-	// }
-
-	// return { year: selectedYear, category: selectedCategory};
-	// return selectedCategory;
-	return { startyear: fromyear, endyear: toyear, category: selectedCategory};
-}
-
 
 function processData(startyear, endyear) {
-	// wipePage();
-	var counter = 0
-	var checked = getChecked();
-	// var ChosenYear = checked.year;
-	var ChosenCategory = checked.category;
-	var startyear = checked.startyear;
-	var endyear = checked.endyear;
+
+	console.log(startyear)
+	console.log(endyear)
+	var ChosenCategory = document.getElementById("filterSelect").value;
 
 	//pick data to use depending on chosen category 
 	if (ChosenCategory == "All"){

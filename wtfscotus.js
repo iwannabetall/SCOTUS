@@ -7,7 +7,6 @@ var dataset_agg = scotus;
 // var dataset = scotus;
 var dataset_byissue = scotus_byissue;
 
-console.log(justicedata)
 function wipePage() {
 	var plot = document.getElementById("mainChart")
 	if (plot.hasChildNodes()){
@@ -48,13 +47,6 @@ function processData(startyear, endyear) {
 	var startyear = checked.startyear;
 	var endyear = checked.endyear;
 
-	console.log(startyear);
-	console.log(endyear);
-	//filter data for years selected
-	// if (startyear == 0){
-	// 	var checked = getChecked();
-	// 	console.log(checked.startyear);
-	// }
 	//pick data to use depending on chosen category 
 	if (ChosenCategory == "All"){
 		var dataset = dataset_agg;
@@ -64,10 +56,7 @@ function processData(startyear, endyear) {
 	}
 
 	var scdata_year = dataset.filter(function(d) { 
-		//if match with year, pull out the entire data 
-		// if (ChosenYear.indexOf(d.Year) >= 0) {
-		// 	return d;
-		// }
+		//if match with year, pull out the entire data 		
 		if ((d.Year >= startyear) && (d.Year <= endyear))
 		{				
 			return d;
@@ -84,32 +73,8 @@ function processData(startyear, endyear) {
 				return d.Topic == ChosenCategory;
 			// }
 		})
-	} //else if (ChosenCategory == "All") {
-		// scdata_year = d3.nest()
-		// 	//get one of each year for every Justice pairing, need to calculate total rate for period of years 
-		// 		.key(function(d) { return d.J_id;})
-		// 		// .key(function(d) { return d.Year;})
-		// // 		.rollup(function(Jpaired) {
-		// // //Jpaired = data is aggregated by J_id.  Jpaired is an array of arrays, where each nested array contains 
-		// // //all issue level data for each J_id -- highest level of array is J_id, ie the key w/an array of topic level values 
-		// // //  we just need one of each pair, so get first entry in each list of array values
-		// // //number of arrays of obj = # of J_id.  Num obj in each array = 15, ie # of case topics 
-		// // 			// console.log(Jpaired[0]);
-		// // 			return Jpaired[0];
-		// // 		})
-		// 		.entries(scdata_year);
-	//}
-	console.log(scdata_year);
-	// if (ChosenCategory == "All"){
-	// 	newdatabyyear = []
-	// 	//reformat data to match if not all 
-	// 	for (i = 0; i < scdata_year.length; i++){		
-	// 		newdatabyyear.push(scdata_year[i].value)
-	// 	}
-	// 	scdata_year = newdatabyyear;
-	// }
+	} 
 
-	// console.log(scdata_year);
 	initVis(scdata_year, ChosenCategory)
 }
 
@@ -135,28 +100,7 @@ function initVis(databyyear, ChosenCategory){
 			return {J1name: J1name, J2name: J2name, Case_Count: totalopps, Total_Votes: totalvotes, ColorValue: ColorValue};
 			})
 		.entries(databyyear); 
-		console.log(databy_Jpair); 
-
-	 // databyyear = d3.nest()
-		// 	//get one of each year for every Justice pairing, need to calculate total rate for period of years 
-		// 		.key(function(d) { return d.J_id;})				
-		// 		.rollup(function(Jpaired) {
-		// 			// console.log(Jpaired)
-		// 			var totalfreq = d3.sum(Jpaired, function (g) {
-		// 				// console.log(g.Total_Freq);
-		// 			return g.Total_Freq; 
-		// 		})
-		// 			// console.log(totalfreq);
-		// //Jpaired = data is aggregated by J_id.  Jpaired is an array of arrays, where each nested array contains 
-		// //all issue level data for each J_id -- highest level of array is J_id, ie the key w/an array of topic level values 
-		// //  we just need one of each pair, so get first entry in each list of array values
-		// //number of arrays of obj = # of J_id.  Num obj in each array = 15, ie # of case topics 
-		// 			// console.log(Jpaired[0]);
-		// 			return totalfreq;
-		// 		})
-		// 		.entries(databyyear);
-
-	// console.log(databyyear);
+		console.log(databy_Jpair); 	
 
 	//WHAT SHOULD SCALE BE?!
 	var max_freq = d3.max(databyyear, function(d) { return d.freq; });
@@ -249,61 +193,27 @@ function initVis(databyyear, ChosenCategory){
 	   	})
 	   .attr("width", cellsize)
 	   .attr("height", cellsize)	   
-	   .attr('fill', function(d,i) { 
-	   // if (ChosenCategory == "All"){	
-
-	   		if (d.value.ColorValue == 1){
-	   			if (d.value.Case_Count > 0){
-	   				return Dcolor(d.value.Total_Votes/d.value.Case_Count);	
-	   			}
-	   			else {
-	   				return 0;
-	   			}
-		   } else if (d.value.ColorValue == -1){
-		   	// console.log(d)
-		   		if (d.value.Case_Count > 0){
-		   			console.log(d.value.Total_Votes/d.value.Case_Count)
-	   				return Rcolor(d.value.Total_Votes/d.value.Case_Count);	
-	   			}
-	   			else{
-	   				return 0;
-	   			}
-		   } else {
-		   	// console.log(d)
-		   		if (d.value.Case_Count > 0){
-	   				return Pcolor(d.value.Total_Votes/d.value.Case_Count);	
-	   			}
-	   			else{
-	   				return 0;
-	   			}
-		   } 
-	   // }
-	   // else {
-	   // 		if (d.ColorValue == 1){
-	   // 			if (d.Opps_By_Issue > 0){
-	   // 				return Dcolor(d.Agree_Freq_By_Issue/d.Opps_By_Issue);	
-	   // 			}
-	   // 			else {
-	   // 				return 0;
-	   // 			}
-		  //  } else if (d.ColorValue == -1){
-		  //  		if (d.Opps_By_Issue > 0){
-	   // 				return Rcolor(d.Agree_Freq_By_Issue/d.Opps_By_Issue);	
-	   // 			}
-	   // 			else {
-	   // 				return 0;
-	   // 			}
-		  //  } else {
-		  //  		if (d.Opps_By_Issue > 0){
-	   // 				return Pcolor(d.Agree_Freq_By_Issue/d.Opps_By_Issue);	
-	   // 			}
-	   // 			else {
-	   // 				return 0;
-	   // 			}
-		  //  } 
-	   // }
-	   
-	})
+	   .attr('fill', function(d,i) { 	   
+	   		//color the blocks based on how they voted with a diff judge 
+	   		//get rate of agreement 
+	   		if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}
+	   		//get color depending on if R-R, D-D, R-D
+	   		if (d.value.ColorValue == 1)
+	   		{//D-D
+	   			return Dcolor(agree_rate);
+	   		} else if (d.value.ColorValue == -1)
+	   		{ //R-R
+	   			return Rcolor(agree_rate);
+	   		}
+	   		else 
+	   		{   //mix R-D		   	
+   				return Pcolor(agree_rate);
+   			}
+   		})
 		.on("mouseover", function(d){tip.show(d)})
 		.on("mouseout", function(d){tip.hide(d);});
 	

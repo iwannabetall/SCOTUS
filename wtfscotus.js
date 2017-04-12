@@ -53,6 +53,7 @@ function processData(startyear, endyear) {
 }
 
 function initVis(databyyear, ChosenCategory){
+	
 	console.log(databyyear)
 	var databy_Jpair = d3.nest()
 		//get one of each year for every Justice pairing, need to calculate total rate for period of years 
@@ -74,7 +75,7 @@ function initVis(databyyear, ChosenCategory){
 			return {J1name: J1name, J2name: J2name, Case_Count: totalopps, Total_Votes: totalvotes, ColorValue: ColorValue};
 			})
 		.entries(databyyear); 
-		console.log(databy_Jpair); 	
+		// console.log(databy_Jpair); 	
 
 	//WHAT SHOULD SCALE BE?!
 	var max_freq = d3.max(databyyear, function(d) { return d.freq; });
@@ -188,8 +189,20 @@ function initVis(databyyear, ChosenCategory){
    				return Pcolor(agree_rate);
    			}
    		})
-		.on("mouseover", function(d){tip.show(d)})
-		.on("mouseout", function(d){tip.hide(d);});
+		.on("mouseover", function(d){ tip.show(d); })
+		.on("mouseout", function(d){ tip.hide(d); })
+		.on("mouseover", function(d) 
+	   		{ //when mouse over box, make rate visible 
+	   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
+	   			var ratetextel = document.getElementById(idname);
+	   			ratetextel.style.opacity = 1;	   			
+	    })
+	    .on("mouseout", function(d) 
+	   		{ 
+	   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
+	   			var ratetextel = document.getElementById(idname);
+	   			ratetextel.style.opacity = 0;	   			
+	    });
 	
 	//add label of prez who appointed them 
 	var diag = svg.append("g").selectAll("text")
@@ -245,6 +258,11 @@ function initVis(databyyear, ChosenCategory){
 
 	rate_text
 		.attr("class", "rate_text")	
+		.attr("id", function (d,i) { 
+	  	// return d.J1name + "_" + d.J2name;  does not work b/c order of data is random
+	  	//must use J_unique to give id names
+	  	return J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";	  
+		})
 		.attr("x", function(d, i) {
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
@@ -264,9 +282,8 @@ function initVis(databyyear, ChosenCategory){
 	   		} else {
 	   			var agree_rate = 0;
 	   		}
-	   		return Math.round(agree_rate * 100) + "%"})
-	   .on("mouseover", function(d) { });
+	   		return Math.round(agree_rate * 100) + "%";
+	   	});
 
-	svg.exit().remove();
-
+	
 }

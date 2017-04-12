@@ -152,7 +152,7 @@ function initVis(databyyear, ChosenCategory){
 	   .attr("id", function (d,i) { 
 	  	// return d.J1name + "_" + d.J2name;  does not work b/c order of data is random
 	  	//must use J_unique to give id names
-	  	return J_unique[J_unique.indexOf(d.value.J1name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)];	  
+	  	return J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)];	  
 		})
 	   .attr("x", function(d, i) {
 	   		//want lower triangular --switch max and min if want upper triangular
@@ -237,6 +237,36 @@ function initVis(databyyear, ChosenCategory){
 		.attr("transform", "rotate(-90)")
 		.text(function(d){ return d});
 
-	// svg.exit().remove();
+	var rate_text = svg.append("g")
+		.selectAll("text")
+			.data(databy_Jpair)
+			.enter()
+			.append("text");
+
+	rate_text
+		.attr("class", "rate_text")	
+		.attr("x", function(d, i) {
+	   		//want lower triangular --switch max and min if want upper triangular
+	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
+	   		// console.log(d)
+	   		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	   		return cellsize * (1 + x_coor);
+	   })
+	   .attr("y",  function(d, i) {   
+	   		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	   		return cellsize * (1 + y_coor);
+	   	})
+	   .style('opacity', 0)                
+	   .text(function(d) {
+	   		if (d.value.Case_Count > 0)
+	   		{
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}
+	   		return Math.round(agree_rate * 100) + "%"})
+	   .on("mouseover", function(d) { });
+
+	svg.exit().remove();
 
 }

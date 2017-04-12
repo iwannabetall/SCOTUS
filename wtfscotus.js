@@ -14,13 +14,83 @@ function wipePage() {
 	}
 }
 
+//OOHHHHH this is how you write a function and call it by object.visualLength();
+// String.prototype.visualLength = function()  
+// {
+//     var ruler = $("ruler");
+//     ruler.innerHTML = this;
+//     return ruler.offsetWidth;
+// // }
+// function pxLength(text)  
+// {
+//     var ruler = document.getElementById("ruler")
+//     console.log(ruler)
+//     ruler.innerHTML = text;
+//     console.log(ruler)
+//     ruler = document.getElementById("ruler")
+//     console.log(ruler)
+//     return ruler.clientWidth;
+// }
+
+//find how much to shift the label/axis down by based on max length of justice name
+function getDownShiftAmt(elements){
+	var el = document.getElementById("ruler")
+	var max_width = 0;	
+	for (i = 0; i < elements.length; i++){
+		
+		el.innerHTML = elements[i];		
+		// console.log(el.getPropertyValue('font-size'))
+		var current_width = $("#ruler").width()  //width is a jquery function, must ref'n with jquery? 
+
+		if (current_width > max_width){
+			max_width = current_width;
+		} 
+	}
+
+	//how to get with javascript
+	// var el = document.getElementsByClassName(idtag);  
+	// var max_width = 0;	
+	// for (i = 0; i < el.length; i++){
+	// 	// console.log(el[i].clientWidth)  
+	// 	if (el[i].clientWidth > max_width){			
+	// 		max_width = el[i].clientWidth;		
+	// 	}		
+	// }
+	return max_width;
+}
+
+
+function getChecked(){
+	
+	var selectedCategory = document.getElementById("filterSelect").value;
+	
+	var fromyear = document.getElementsByClassName("irs-from");		
+	fromyear = parseInt(fromyear[0].innerHTML);		
+ 	
+ 	console.log(fromyear)
+ 	var toyear = document.getElementsByClassName("irs-to");		
+ 	toyear = parseInt(toyear[0].innerHTML);
+
+	return {startyear: fromyear, endyear: toyear, category: selectedCategory};
+
+}
+
 
 function processData(startyear, endyear) {
-
+	
+	console.log(startyear)
+	if (!startyear){
+		console.log("wtf")
+		var checked = getChecked();
+		var startyear = checked.startyear;
+		var endyear = checked.endyear;
+		var ChosenCategory = checked.category;	
+	}
+	
 	console.log(startyear)
 	console.log(endyear)
 	var ChosenCategory = document.getElementById("filterSelect").value;
-
+	console.log(ChosenCategory)
 	//pick data to use depending on chosen category 
 	if (ChosenCategory == "All"){
 		var dataset = dataset_agg;
@@ -37,7 +107,7 @@ function processData(startyear, endyear) {
 		}
 
 	});
-	// console.log(scdata_year);
+	console.log(scdata_year);
 		//filter data if don't select all, aggregate if do 
 	if (ChosenCategory != "All"){
 		scdata_year = scdata_year.filter(function(d) {
@@ -99,6 +169,12 @@ function initVis(databyyear, ChosenCategory){
 		return i == J_list.indexOf(itm);
 	});
 	J_unique.sort()  //sort list 
+	
+	// console.log(pxLength(J_unique[1]));
+	// var canvas = document.getElementById("mainChart");
+	// var ctx = canvas.getContext("2d");
+	// ctx.font = "30px Arial";
+	// var txt = J_unique[1]
 
 	//get index of prez that appointed justice and their party and make into object with list of justices
 	J_prez_index = []
@@ -115,11 +191,24 @@ function initVis(databyyear, ChosenCategory){
 	J_unique_prez = d3.zip(J_unique, J_prez)   
 	J_unique_party = d3.zip(J_unique, J_party)
 	
+
 	//Width and height
-	var w = 1000;
+	var w = 800;
 	var h = 800;
 	var barPadding = 5;
-	var cellsize = 720/J_unique.length;
+	var cellsize = 650/J_unique.length;
+	var labelpadding = 15;	
+	var fontsize = "18px";
+	var fontsizevalue = 18;  //initial font size
+
+	if (cellsize < 22){		
+		fontsizevalue = cellsize * 0.7;
+		fontsizevalue = Math.round(fontsizevalue)
+		fontsize = fontsizevalue + "px";
+	}
+
+	//how much to shift boxes/labels by based on max pixel length of text
+	var downshiftAmt = getDownShiftAmt(J_unique)
 
 	// console.log(cellsize);
 
@@ -135,10 +224,19 @@ function initVis(databyyear, ChosenCategory){
 	var tip = d3.tip()
 		.attr("class", "d3-tip")
 		.html(function(d,i) { 
+			if (d.value.Case_Count > 0)
+	   		{
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}
+	   		var percent_rate = Math.round(agree_rate * 100) + "%";
+
 			var tooltip_y_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
 			var tooltip_x_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
 			var tooltiptext = J_unique[tooltip_x_coor] + ", " + J_unique[tooltip_y_coor]		
-			return tooltiptext;});
+			return tooltiptext + "<br><p align='center'>" + percent_rate + "</p>";
+		});
 		
 	svg.call(tip);
 	// console.log(tip);
@@ -153,18 +251,22 @@ function initVis(databyyear, ChosenCategory){
 	   .attr("id", function (d,i) { 
 	  	// return d.J1name + "_" + d.J2name;  does not work b/c order of data is random
 	  	//must use J_unique to give id names
-	  	return J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)];	  
+	  	var boxid = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)];
+	  	return boxid;
 		})
 	   .attr("x", function(d, i) {
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
 	   		// console.log(d)
 	   		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-	   		return cellsize * (1 + x_coor);
+	   		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	   		return labelpadding + downshiftAmt + cellsize * (x_coor);
+
 	   })
 	   .attr("y",  function(d, i) {   
-	   		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-	   		return cellsize * (1 + y_coor);
+	   		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
+	   		// console.log(labelpadding + 100 + cellsize * (1 + y_coor));
+	   		return labelpadding + downshiftAmt + cellsize * (y_coor);
 	   	})
 	   .attr("width", cellsize)
 	   .attr("height", cellsize)	   
@@ -189,21 +291,23 @@ function initVis(databyyear, ChosenCategory){
    				return Pcolor(agree_rate);
    			}
    		})
+	   	.style("stroke-width", 1)
+	   	.style("stroke", "black")
 		.on("mouseover", function(d){ tip.show(d); })
-		.on("mouseout", function(d){ tip.hide(d); })
-		.on("mouseover", function(d) 
-	   		{ //when mouse over box, make rate visible 
-	   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
-	   			var ratetextel = document.getElementById(idname);
-	   			ratetextel.style.opacity = 1;	   			
-	    })
-	    .on("mouseout", function(d) 
-	   		{ 
-	   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
-	   			var ratetextel = document.getElementById(idname);
-	   			ratetextel.style.opacity = 0;	   			
-	    });
-	
+		.on("mouseout", function(d){ tip.hide(d); });
+		// .on("mouseover", function(d) 
+	 //   		{ //when mouse over box, make rate visible 
+	 //   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
+	 //   			var ratetextel = document.getElementById(idname);
+	 //   			ratetextel.style.opacity = 1;	   			
+	 //    })
+	 //    .on("mouseout", function(d) 
+	 //   		{ 
+	 //   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
+	 //   			var ratetextel = document.getElementById(idname);
+	 //   			ratetextel.style.opacity = 0;	   			
+	 //    });
+
 	//add label of prez who appointed them 
 	var diag = svg.append("g").selectAll("text")
 		.data(J_unique_prez)
@@ -213,42 +317,67 @@ function initVis(databyyear, ChosenCategory){
 	diag
 		.attr("x", function(d, i) {
 	   		//want lower triangular --switch max and min if want upper triangular
-	   		return 80 + cellsize * (1 + i) - (cellsize * 0.5 ); 
+	   		return 2 + labelpadding + downshiftAmt + cellsize * i; 
 	   })
 	   .attr("y",  function(d, i) {   
-	   		return 80 + cellsize * (1 + i) - (cellsize * 0.5 ); 
+	   		console.log(fontsizevalue/2)
+	   		
+	   		return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5); 
 	   	})
 	   .text(function(d) { 
 	   		return d[1]
 		})
-
-	// justice labels
+	   .style("font-size", fontsize)
+	   .attr("dy","0.35em");  //center text vertically
+	
+	// justice labels -- vertical axis 
 	var J1text = svg.append("g").selectAll("text")
-		.data(J_unique)
+		.data(J_unique_party)
 		.enter()
 		.append("text");
 
 	J1text
 		.attr("class", "judgelabel")
-		.attr("x", 20 )
-		.attr("y", function(d, i) { return 80 + cellsize * (1 + i) - (cellsize * 0.5 );  })
-		.text(function(d){ return d});
+		.attr("x", 0)
+		.attr("y", function(d, i) { 
+			var ypos = labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5); 
+			return ypos; 
+		})
+		.attr("dy","0.35em") //center text vertically
+		.text(function(d){ return d[0]; })
+		.style("font-size", fontsize)
+		.style("fill", function(d) {  
+			if (d[1] == "D"){
+				return "blue";
+			} else {
+				return "red";
+			}
+		});
 
 	// J1text.data(J_unique).exit().remove();
-
+	//x axis--rotated labels 
 	var J2text = svg.append("g")
 		.selectAll("text")
-			.data(J_unique)
+			.data(J_unique_party)
 			.enter()
 			.append("text");
 //wtf is going on with the x and y being swapped -- b/c i transformed? 
 	J2text
 		.attr("class", "judgelabel")
-		.attr("x", -20)
-		.attr("y", function(d, i) {  return 80 + cellsize * (1 + i) - (cellsize * 0.5 );  })
+		.attr("x", 0)
+		.attr("y", function(d, i) {  return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.style("text-anchor", "end")
 		.attr("transform", "rotate(-90)")
-		.text(function(d){ return d});
+		.text(function(d){ return d[0]; })
+		.style("fill", function(d) {  
+			if (d[1] == "D"){
+				return "blue";
+			} else {
+				return "red";
+			}
+		})
+		.style("font-size", fontsize)
+		.attr("dy","0.35em");  //center text vertically;	
 
 	var rate_text = svg.append("g")
 		.selectAll("text")
@@ -265,16 +394,18 @@ function initVis(databyyear, ChosenCategory){
 		})
 		.attr("x", function(d, i) {
 	   		//want lower triangular --switch max and min if want upper triangular
-	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
-	   		// console.log(d)
+	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw	   		
 	   		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-	   		return cellsize * (1 + x_coor);
+	   		return labelpadding + downshiftAmt + cellsize * (1 + x_coor) - (cellsize * 0.5) - 14;
+	   		// return 0;
 	   })
 	   .attr("y",  function(d, i) {   
 	   		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-	   		return cellsize * (1 + y_coor);
+	   		return labelpadding + downshiftAmt + cellsize * (1 + y_coor) - (cellsize * 0.5);
 	   	})
-	   .style('opacity', 0)                
+	   // .attr("text-anchor", "middle")  // 
+	   .style('opacity', 0)
+	   .style("font-size", fontsize) 
 	   .text(function(d) {
 	   		if (d.value.Case_Count > 0)
 	   		{
@@ -283,7 +414,37 @@ function initVis(databyyear, ChosenCategory){
 	   			var agree_rate = 0;
 	   		}
 	   		return Math.round(agree_rate * 100) + "%";
-	   	});
+	   	})
+	   	.attr("dy","0.35em");  //center text vertically;
 
-	
+	   	//doesn't work
+	// svg
+	// 	.data(databy_Jpair)
+	// 	.attr("x", function(d, i) {
+	//    		//want lower triangular --switch max and min if want upper triangular
+	//    		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
+	//    		// console.log(d)
+	//    		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	//    		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	//    		return labelpadding + downshiftAmt + cellsize * (x_coor);
+
+	//    })
+	//    .attr("y",  function(d, i) {   
+	//    		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
+	//    		// console.log(labelpadding + 100 + cellsize * (1 + y_coor));
+	//    		return labelpadding + downshiftAmt + cellsize * (y_coor);
+	//    	})
+	// 	.on("mouseover", function(d) 
+	//    		{ //when mouse over box, make rate visible 
+	//    			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
+	//    			var ratetextel = document.getElementById(idname);
+	//    			ratetextel.style.opacity = 1;	   			
+	//     })
+	//     .on("mouseout", function(d) 
+	//    		{ 
+	//    			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
+	//    			var ratetextel = document.getElementById(idname);
+	//    			ratetextel.style.opacity = 0;	   			
+	//     });
+
 }

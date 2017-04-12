@@ -7,6 +7,7 @@ var dataset_agg = scotus;
 // var dataset = scotus;
 var dataset_byissue = scotus_byissue;
 
+console.log(justicedata)
 function wipePage() {
 	var plot = document.getElementById("mainChart")
 	if (plot.hasChildNodes()){
@@ -179,9 +180,22 @@ function initVis(databyyear, ChosenCategory){
 		return i == J_list.indexOf(itm);
 	});
 	J_unique.sort()  //sort list 
-	// console.log(J_unique.length);
-	// console.log(J_unique)
 
+	//get index of prez that appointed justice and their party and make into object with list of justices
+	J_prez_index = []
+	J_party = []  //president's party 
+	J_prez = []
+	J_name = [] //sanity check passed -- names match J_unique
+	for (i = 0; i < J_unique.length; i++){
+		pos = justicedata.map(function(d) { return d.justiceName; }).indexOf(J_unique[i]);	
+		J_prez.push(justicedata[pos].President)
+		J_name.push(justicedata[pos].justiceName)
+		J_party.push(justicedata[pos].PresidentParty)
+		// J_prez_index.push(pos)
+	}
+	J_unique_prez = d3.zip(J_unique, J_prez)   
+	J_unique_party = d3.zip(J_unique, J_party)
+	
 	//Width and height
 	var w = 1000;
 	var h = 800;
@@ -237,7 +251,7 @@ function initVis(databyyear, ChosenCategory){
 	   .attr("height", cellsize)	   
 	   .attr('fill', function(d,i) { 
 	   // if (ChosenCategory == "All"){	
-	   // console.log(d.value.Case_Count)		
+
 	   		if (d.value.ColorValue == 1){
 	   			if (d.value.Case_Count > 0){
 	   				return Dcolor(d.value.Total_Votes/d.value.Case_Count);	
@@ -295,7 +309,7 @@ function initVis(databyyear, ChosenCategory){
 	
 	//add label of prez who appointed them 
 	var diag = svg.append("g").selectAll("text")
-		.data(J_unique)
+		.data(J_unique_prez)
 		.enter()
 		.append("text");
 
@@ -308,7 +322,7 @@ function initVis(databyyear, ChosenCategory){
 	   		return 80 + cellsize * (1 + i) - (cellsize * 0.5 ); 
 	   	})
 	   .text(function(d) { 
-	   		return d
+	   		return d[1]
 		})
 
 	// justice labels

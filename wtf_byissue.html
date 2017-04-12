@@ -8,15 +8,26 @@
 		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script src="scotus.json"></script>
 		<script src="justicedata.json"></script>
-		<script src="scotus_byissue.json"></script>
-		<script src="jquery.js"></script>
-		<script src="wtfscotus.js"></script>
-		<style type="dataviz.css"></style>
+		<script src="scotus_byissue.json"></script>		
+		<script src="js/gotz-d3-tip.js"></script>		
+
+		<link rel="stylesheet" type="text/css" href="css/dataviz.css">
+		<link rel="stylesheet" href="css/normalize.css" />
+	    <link rel="stylesheet" href="css/ion.rangeSlider.css" />
+	    <link rel="stylesheet" href="css/ion.rangeSlider.skinFlat.css" />
 	</head>
 	<body>
-
-	<div class="checkboxes"> </div>
-
+		<h1>Supreme Court Justice Voting (1946 - 2015)</h1>		
+	
+	<!--Slider -->
+<div style="position: relative; padding: 20px; width: 85%; margin:auto;">
+    <div>
+        <input type="text" id="range" value="" name="range" />
+    </div>
+</div>
+<!--
+<div class="checkboxes"> </div>
+ -->
 	<div id="filterContainer">
 		<select id="filterSelect" onchange="processData();">
 			<option value="All">All</option>
@@ -37,14 +48,14 @@
 
 	<!-- VIZ DIV-->
 	<div id="mainChart"></div>	
+	<div style="margin:auto;">		
+	<p> Data source: <a href="http://scdb.wustl.edu/index.php">Supreme Court Database</a> <p> 
+	</div>
 
 
+	<script src="jquery.js"></script>		
+		<script src="js/ion.rangeSlider.min.js"></script>		
+		<script src="wtfscotus.js"></script>
 
-
-
-		<script type="text/javascript">//initialize 
-
-	// processData();
-	</script>
 	</body>
 </html>

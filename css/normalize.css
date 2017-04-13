@@ -6,14 +6,18 @@
  *    user zoom.
  */
 
-
+html {
+    font-family: "Source Sans Pro", Helvetica, sans-serif; /* 1 */
+    -ms-text-size-adjust: 100%; /* 2 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
 
 /**
  * Remove default margin.
  */
 
 div, p, body {
-    font-family: sans-serif; /* 1 */
+    font-family: "Source Sans Pro", Helvetica, sans-serif; /* 1 */
     margin: 0;
 }
 
@@ -128,12 +132,6 @@ dfn {
  * Address variable `h1` font-size and margin within `section` and `article`
  * contexts in Firefox 4+, Safari, and Chrome.
  */
-
-h1 {
-    font-size: 2em;
-    margin: 0.67em 0;
-    text-align: center;
-}
 
 /**
  * Address styling not present in IE 8/9.

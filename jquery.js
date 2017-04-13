@@ -14,17 +14,19 @@ $(document).ready(function(){
             keyboard: true,
             min: 1946,
             max: 2015,
-            from: 1975, //where slider starts 
-            to: 1980,
+            from: 1978, //where slider starts 
+            to: 1983,
             type: 'double',
             step: 1,
             grid: true,
             prettify_enabled: false,
             onStart: function (data){
+            	wipePage();
             	//process data with selected years -- what happens to function without parameter            	
             	processData(data.from, data.to);
             },
             onFinish: function (data) {
+            	wipePage();
             	processData(data.from, data.to);
             }
         });

@@ -9,8 +9,9 @@ var dataset_byissue = scotus_byissue;
 
 function wipePage() {
 	var plot = document.getElementById("mainChart")
+	console.log(plot)
 	if (plot.hasChildNodes()){
-		plot.removeChild(plot.ChildNodes[0])
+		plot.removeChild(plot.childNodes[0])
 	}
 }
 
@@ -86,7 +87,7 @@ function processData(startyear, endyear) {
 		var ChosenCategory = checked.category;	
 	}
 	
-	// console.log(startyear)
+	console.log(startyear)
 	// console.log(endyear)
 	var ChosenCategory = document.getElementById("filterSelect").value;
 	// console.log(ChosenCategory)
@@ -185,15 +186,15 @@ function initVis(databyyear, ChosenCategory){
 	
 
 	//Width and height
-	var w = 800;
-	var h = 800;
+	var w = 805;  //needs to be 805 to fit eisenhower in corner on svg
+ 	var h = 800;
 	var barPadding = 5;
 	var cellsize = 650/J_unique.length;
 	var labelpadding = 15;	
 	var fontsize = "18px";
 	var fontsizevalue = 18;  //initial font size
 	//change font based on cell size
-	if (cellsize < 32){		
+	if (cellsize < 33){		
 		fontsizevalue = 16;
 		fontsizevalue = Math.round(fontsizevalue)
 		fontsize = fontsizevalue + "px";
@@ -240,7 +241,8 @@ function initVis(databyyear, ChosenCategory){
 				}
 			} else {
 				//no data between justices 
-				var tooltiptext = "No data.  " +  J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " did not overlap."
+				// var tooltiptext = "No data.  " +  J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " did not overlap."
+				var tooltiptext = "No instances. "
 			}
 			return tooltiptext;
 		});
@@ -300,6 +302,8 @@ function initVis(databyyear, ChosenCategory){
 		.on("mouseover", function(d){ tip.show(d); })
 		.on("mouseout", function(d){ tip.hide(d); });	
 
+	svg.exit().remove();
+
 	//add label of prez who appointed them 
 	var diag = svg.append("g").selectAll("text")
 		.data(J_unique_prez)
@@ -319,6 +323,8 @@ function initVis(databyyear, ChosenCategory){
 		})
 	   .style("font-size", fontsize)
 	   .attr("dy","0.35em");  //center text vertically
+
+	diag.exit().remove();
 	
 	// justice labels -- vertical axis 
 	var J1text = svg.append("g").selectAll("text")
@@ -344,7 +350,7 @@ function initVis(databyyear, ChosenCategory){
 			}
 		});
 
-	// J1text.data(J_unique).exit().remove();
+	J1text.exit().remove();
 	//x axis--rotated labels 
 	var J2text = svg.append("g")
 		.selectAll("text")
@@ -354,7 +360,7 @@ function initVis(databyyear, ChosenCategory){
 //wtf is going on with the x and y being swapped -- b/c i transformed? 
 	J2text
 		.attr("class", "judgelabel")
-		.attr("x", 0)
+		.attr("x", -15)
 		.attr("y", function(d, i) {  return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.style("text-anchor", "end")
 		.attr("transform", "rotate(-90)")
@@ -368,6 +374,8 @@ function initVis(databyyear, ChosenCategory){
 		})
 		.style("font-size", fontsize)
 		.attr("dy","0.35em");  //center text vertically;	
+
+	J2text.exit().remove();
 
 	var rate_text = svg.append("g")
 		.selectAll("text")
@@ -406,5 +414,6 @@ function initVis(databyyear, ChosenCategory){
 	   	})
 	   	.attr("dy","0.35em");  //center text vertically;
 
+	rate_text.exit().remove();
 
 }

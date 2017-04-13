@@ -6,7 +6,7 @@ library(tidyjson)
 library(rjson)
 library(igraph)
 
-J_party_final = read.csv(file = "Justicedata1.csv")  #justices and the party they're assoc with 
+J_party_final = read.csv(file = "Justicedata.csv")  #justices and the party they're assoc with 
 data1 = fromJSON(file = "votedataG1_byissue.txt")
 issues = read.csv(file = "IssueKeyLookup.csv")  #use to merge issue numbers with issue topic
 fulldata = {}
@@ -23,8 +23,8 @@ for (i in 1:length(data1)){
       matrix1 = rbind(matrix1, rowdata1)        
     }    
   }
-  
-  colnames(matrix1) = c("J1","J2", "Total_Freq", "Case_Opps", "Agree_Freq_By_Issue", "Opps_By_Issue", "issueArea", "Year")
+  #Case_Opps, Total_Freq = total opps/freq for that issue, analogous to all issues--matching names for easier d3
+  colnames(matrix1) = c("J1","J2", "AllIssues_Total_Freq", "AllIssues_Case_Opps", "Total_Freq", "Case_Opps", "issueArea", "Year")
   m11 = merge(matrix1, J_party_final, by.x = "J1", by.y = "justice")  #merge justice info for 1st justice
   m21 = merge(m11, J_party_final, by.x = "J2", by.y = "justice")  #merge 2nd justice info
   colnames(m21)[9:12] = c("J1name", "J1Prez", "J1PrezParty", "J1party")
@@ -49,4 +49,5 @@ dems = intersect(which(d["J1PrezParty"] == "D"),which(d["J2PrezParty"] == "D"))
 repubs = intersect(which(d["J1PrezParty"] == "R"),which(d["J2PrezParty"] == "R"))
 d[dems, "ColorValue"] = 1
 d[repubs, "ColorValue"] = -1
-write.csv(d, file="D3_ByIssueFinal.csv")
+finalfinal = merge(d,issues, by.x = "issueArea", by.y = "Value")
+write.csv(finalfinal, file="D3_ByIssueFinal.csv")

@@ -79,18 +79,17 @@ function getChecked(){
 function processData(startyear, endyear) {
 	
 	console.log(startyear)
-	if (!startyear){
-		console.log("wtf")
+	if (!startyear){		
 		var checked = getChecked();
 		var startyear = checked.startyear;
 		var endyear = checked.endyear;
 		var ChosenCategory = checked.category;	
 	}
 	
-	console.log(startyear)
-	console.log(endyear)
+	// console.log(startyear)
+	// console.log(endyear)
 	var ChosenCategory = document.getElementById("filterSelect").value;
-	console.log(ChosenCategory)
+	// console.log(ChosenCategory)
 	//pick data to use depending on chosen category 
 	if (ChosenCategory == "All"){
 		var dataset = dataset_agg;
@@ -107,7 +106,6 @@ function processData(startyear, endyear) {
 		}
 
 	});
-	console.log(scdata_year);
 		//filter data if don't select all, aggregate if do 
 	if (ChosenCategory != "All"){
 		scdata_year = scdata_year.filter(function(d) {
@@ -124,7 +122,7 @@ function processData(startyear, endyear) {
 
 function initVis(databyyear, ChosenCategory){
 	
-	console.log(databyyear)
+	// console.log(databyyear)
 	var databy_Jpair = d3.nest()
 		//get one of each year for every Justice pairing, need to calculate total rate for period of years 
 		.key(function(d) { return d.J_id;})				
@@ -147,9 +145,9 @@ function initVis(databyyear, ChosenCategory){
 		.entries(databyyear); 
 		// console.log(databy_Jpair); 	
 
-	//WHAT SHOULD SCALE BE?!
-	var max_freq = d3.max(databyyear, function(d) { return d.freq; });
-	var min_freq = d3.min(databyyear, function(d) { return d.freq; });
+	// //WHAT SHOULD SCALE BE?!
+	// var max_freq = d3.max(databyyear, function(d) { return d.freq; });
+	// var min_freq = d3.min(databyyear, function(d) { return d.freq; });
 	//color schemes depending on if R-R, D-D, R-D etc
 	var Rcolor = d3.scaleLinear().range(["white", "red"]).domain([0, 1]);
 	var Dcolor = d3.scaleLinear().range(["white", "blue"]).domain([0, 1]);
@@ -169,12 +167,6 @@ function initVis(databyyear, ChosenCategory){
 		return i == J_list.indexOf(itm);
 	});
 	J_unique.sort()  //sort list 
-	
-	// console.log(pxLength(J_unique[1]));
-	// var canvas = document.getElementById("mainChart");
-	// var ctx = canvas.getContext("2d");
-	// ctx.font = "30px Arial";
-	// var txt = J_unique[1]
 
 	//get index of prez that appointed justice and their party and make into object with list of justices
 	J_prez_index = []
@@ -200,6 +192,12 @@ function initVis(databyyear, ChosenCategory){
 	var labelpadding = 15;	
 	var fontsize = "18px";
 	var fontsizevalue = 18;  //initial font size
+	//change font based on cell size
+	if (cellsize < 30){		
+		fontsizevalue = 16;
+		fontsizevalue = Math.round(fontsizevalue)
+		fontsize = fontsizevalue + "px";
+	}
 
 	if (cellsize < 22){		
 		fontsizevalue = cellsize * 0.7;
@@ -210,11 +208,7 @@ function initVis(databyyear, ChosenCategory){
 	//how much to shift boxes/labels by based on max pixel length of text
 	var downshiftAmt = getDownShiftAmt(J_unique)
 
-	// console.log(cellsize);
-
-	// console.log(databyyear)
-	// J1text.exit().remove();
-	// J2text.exit().remove();	
+	
 	//Create SVG element
 	var svg = d3.select("#mainChart")
 		.append("svg")
@@ -231,18 +225,28 @@ function initVis(databyyear, ChosenCategory){
 	   			var agree_rate = 0;
 	   		}
 	   		var percent_rate = Math.round(agree_rate * 100) + "%";
-
+	   	
 			var tooltip_y_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
 			var tooltip_x_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-			var tooltiptext = J_unique[tooltip_x_coor] + ", " + J_unique[tooltip_y_coor]		
-			return tooltiptext + "<br><p align='center'>" + percent_rate + "</p>";
+
+			if (d.value.Case_Count > 0){
+
+				if (ChosenCategory != "All"){					
+					var tooltiptext = J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " voted together on "
+					+ percent_rate + "<br> of the time regarding " + ChosenCategory + ".  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
+				} else {
+					var tooltiptext = J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " voted together "
+					+ percent_rate + "<br> of the time.  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
+				}
+			} else {
+				//no data between justices 
+				var tooltiptext = "No data.  " +  J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " did not overlap."
+			}
+			return tooltiptext;
 		});
 		
 	svg.call(tip);
-	// console.log(tip);
-	// svg.exit().remove();
-	// console.log(databyyear)  //databyyear is array of objects rep every justice pairing in every year
-
+	
 	svg.selectAll("rect")
 	   .data(databy_Jpair)
 	   .enter()
@@ -294,19 +298,7 @@ function initVis(databyyear, ChosenCategory){
 	   	.style("stroke-width", 1)
 	   	.style("stroke", "black")
 		.on("mouseover", function(d){ tip.show(d); })
-		.on("mouseout", function(d){ tip.hide(d); });
-		// .on("mouseover", function(d) 
-	 //   		{ //when mouse over box, make rate visible 
-	 //   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
-	 //   			var ratetextel = document.getElementById(idname);
-	 //   			ratetextel.style.opacity = 1;	   			
-	 //    })
-	 //    .on("mouseout", function(d) 
-	 //   		{ 
-	 //   			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
-	 //   			var ratetextel = document.getElementById(idname);
-	 //   			ratetextel.style.opacity = 0;	   			
-	 //    });
+		.on("mouseout", function(d){ tip.hide(d); });	
 
 	//add label of prez who appointed them 
 	var diag = svg.append("g").selectAll("text")
@@ -319,9 +311,7 @@ function initVis(databyyear, ChosenCategory){
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		return 2 + labelpadding + downshiftAmt + cellsize * i; 
 	   })
-	   .attr("y",  function(d, i) {   
-	   		console.log(fontsizevalue/2)
-	   		
+	   .attr("y",  function(d, i) {   	   		
 	   		return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5); 
 	   	})
 	   .text(function(d) { 
@@ -404,8 +394,7 @@ function initVis(databyyear, ChosenCategory){
 	   		return labelpadding + downshiftAmt + cellsize * (1 + y_coor) - (cellsize * 0.5);
 	   	})
 	   // .attr("text-anchor", "middle")  // 
-	   .style('opacity', 0)
-	   .style("font-size", fontsize) 
+	   .style('opacity', 0)	   
 	   .text(function(d) {
 	   		if (d.value.Case_Count > 0)
 	   		{
@@ -417,34 +406,5 @@ function initVis(databyyear, ChosenCategory){
 	   	})
 	   	.attr("dy","0.35em");  //center text vertically;
 
-	   	//doesn't work
-	// svg
-	// 	.data(databy_Jpair)
-	// 	.attr("x", function(d, i) {
-	//    		//want lower triangular --switch max and min if want upper triangular
-	//    		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
-	//    		// console.log(d)
-	//    		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-	//    		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
-	//    		return labelpadding + downshiftAmt + cellsize * (x_coor);
-
-	//    })
-	//    .attr("y",  function(d, i) {   
-	//    		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
-	//    		// console.log(labelpadding + 100 + cellsize * (1 + y_coor));
-	//    		return labelpadding + downshiftAmt + cellsize * (y_coor);
-	//    	})
-	// 	.on("mouseover", function(d) 
-	//    		{ //when mouse over box, make rate visible 
-	//    			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
-	//    			var ratetextel = document.getElementById(idname);
-	//    			ratetextel.style.opacity = 1;	   			
-	//     })
-	//     .on("mouseout", function(d) 
-	//    		{ 
-	//    			var idname = J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";
-	//    			var ratetextel = document.getElementById(idname);
-	//    			ratetextel.style.opacity = 0;	   			
-	//     });
 
 }

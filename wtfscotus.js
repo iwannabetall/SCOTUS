@@ -193,7 +193,7 @@ function initVis(databyyear, ChosenCategory){
 	var fontsize = "18px";
 	var fontsizevalue = 18;  //initial font size
 	//change font based on cell size
-	if (cellsize < 30){		
+	if (cellsize < 32){		
 		fontsizevalue = 16;
 		fontsizevalue = Math.round(fontsizevalue)
 		fontsize = fontsizevalue + "px";

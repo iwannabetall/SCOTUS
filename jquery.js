@@ -14,8 +14,8 @@ $(document).ready(function(){
             keyboard: true,
             min: 1946,
             max: 2015,
-            from: 1978, //where slider starts 
-            to: 1983,
+            from: 1977, //where slider starts 
+            to: 1980,
             type: 'double',
             step: 1,
             grid: true,

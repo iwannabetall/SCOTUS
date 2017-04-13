@@ -167,46 +167,22 @@ function initVis(databyyear, ChosenCategory){
 	var J_unique = J_list.filter(function(itm, i, J_list){
 		return i == J_list.indexOf(itm);
 	});
-	// J_unique.sort()  //sort list 
-	console.log(J_unique)
-	//get the corresponding segal cover scores, sort justice list based on SC score	
-	J_SCscore = []   //Segal Cover Score 
-	for (i = 0; i < J_unique.length; i++){
-		pos = justicedata.map(function(d) { return d.justiceName; }).indexOf(J_unique[i]);	
-		J_SCscore.push(justicedata[pos].SCScore)
-	}
-	J_unique_SC = d3.zip(J_unique, J_SCscore)
-	//sort zip of unique justices based on SC score, in 2nd column
-	J_unique_SC.sort(function(a, b){
-		// console.log(a[1] - b[1]); 
-		return a[1] - b[1]});
+	J_unique.sort()  //sort list 
 
-	//redo order of J_unique based on SC scores
-	J_unique = []
-	for (i = 0; i < J_unique_SC.length; i++){
-		console.log(J_unique_SC[i][0])
-		J_unique.push((J_unique_SC[i][0]))
-	}
-	
-	//using order of inc/dec SC scores, 
 	//get index of prez that appointed justice and their party and make into object with list of justices
-
 	J_prez_index = []
 	J_party = []  //president's party 
 	J_prez = []
 	J_name = [] //sanity check passed -- names match J_unique
-	J_lastname = [] 
-	
 	for (i = 0; i < J_unique.length; i++){
 		pos = justicedata.map(function(d) { return d.justiceName; }).indexOf(J_unique[i]);	
 		J_prez.push(justicedata[pos].President)
 		J_name.push(justicedata[pos].justiceName)
 		J_party.push(justicedata[pos].PresidentParty)
-		J_lastname.push(justicedata[pos].lastName)	
+		// J_prez_index.push(pos)
 	}
 	J_unique_prez = d3.zip(J_unique, J_prez)   
 	J_unique_party = d3.zip(J_unique, J_party)
-	J_unique_lastname = d3.zip(J_unique, J_lastname)	
 	
 
 	//Width and height
@@ -232,6 +208,7 @@ function initVis(databyyear, ChosenCategory){
 
 	//how much to shift boxes/labels by based on max pixel length of text
 	var downshiftAmt = getDownShiftAmt(J_unique)
+
 	
 	//Create SVG element
 	var svg = d3.select("#mainChart")
@@ -287,12 +264,12 @@ function initVis(databyyear, ChosenCategory){
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
 	   		// console.log(d)
-	   		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
+	   		var x_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
 	   		return labelpadding + downshiftAmt + cellsize * (x_coor);
 
 	   })
 	   .attr("y",  function(d, i) {   
-	   		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
+	   		var y_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
 	   		// console.log(labelpadding + 100 + cellsize * (1 + y_coor));
 	   		return labelpadding + downshiftAmt + cellsize * (y_coor);
 	   	})
@@ -382,7 +359,7 @@ function initVis(databyyear, ChosenCategory){
 //wtf is going on with the x and y being swapped -- b/c i transformed? 
 	J2text
 		.attr("class", "judgelabel")
-		.attr("x", -15)
+		.attr("x", 0)
 		.attr("y", function(d, i) {  return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.style("text-anchor", "end")
 		.attr("transform", "rotate(-90)")

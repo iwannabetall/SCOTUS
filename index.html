@@ -28,11 +28,13 @@
         <input type="text" id="range" value="" name="range" />
     </div>
 </div>
+
 <span id="ruler"> </span>
+
 <!--
 <div class="checkboxes"> </div>
  -->
-	<div id="filterContainer">
+	<div id="filterContainer">		
 		<select id="filterSelect" onchange="wipePage();processData();">
 			<option value="All">All</option>
 			<option value="Criminal Procedure">Criminal Procedure</option>
@@ -47,20 +49,27 @@
 			<option value="Federal Taxation">Federal Taxation</option>
 			<option value="Interstate Relations">Interstate Relations</option>  
 		</select>
+	<!--for screen shotting by year
 	</div>
 
+	<br>
+	<div id="filterContainer">		
+
+		<div id="YearPicker"> 	
+		</div>-->
+	</div>	 
+
 	<h2>How Often Justices Voted with Each Other</h2>
-	<!--<h3>(1946 - 2015)</h3>  -->
 	<div id="legendbox"><p>Agreement Rate between <span class="repub">Republican-Republican</span>, 
 		<span class="dem"> Democrat-Democrat</span>, and <span class="mixed">mixed Republican-Democratic</span> justice pairs (based on nominating president's party). <br><br> Justices have been sorted in decreasing perception of conservativeness, as measured by the <a href="https://en.wikipedia.org/wiki/Segal%E2%80%93Cover_score" target="_blank">Segal-Cover score</a>.</p>
 	</div>
-	
+
 	<!-- VIZ DIV-->
 	<div id="mainChart"></div>	
-	<!-- 	
+		
 	<div style="margin:auto; width:90%; padding-bottom: 10px;">		
 	<p> Data source: <a href="http://scdb.wustl.edu/index.php">Supreme Court Database</a> <p> 
-	</div>-->
+	</div>
 
 	<!-- Javascript -->
 	<script src="js/gotz-d3-tip.js"></script>

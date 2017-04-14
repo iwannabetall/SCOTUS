@@ -6,6 +6,14 @@ $(document).ready(function(){
 	// $years = $.map($(Array(8)),function(val, i) { return i; });
 	// console.log($years)
 
+	//generate years 
+	$('#YearPicker').append('<select id="oneYear" onchange="wipePage();processData(this.value, this.value);">');
+	for (var i = 1946; i < 2016; i++){
+		$('#oneYear').append('<option value="' + i + '">' + i +'</option>');
+	}
+	$('#YearPicker').append('</select>');
+
+
 	 $(function () {
 
         $("#range").ionRangeSlider({

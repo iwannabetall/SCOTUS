@@ -168,8 +168,10 @@ function initVis(databyyear, ChosenCategory){
 
 	//Width and height
 	var w = 805;  //needs to be 805 to fit eisenhower in corner on svg
- 	var h = 720;
+ 	var h = 720;  //for purposes of screenshotting 
+ 	// var h = 800;
 	var barPadding = 5;
+	// var cellsize = 630/J_unique.length;
 	var cellsize = 600/J_unique.length;
 	var labelpadding = 25;	
 	var fontsize = "18px";

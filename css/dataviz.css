@@ -50,9 +50,23 @@ h2 {
 	margin: auto;
 }
 #legendbox{
-	 width: 550px;
+	 width: 850px;
 	 margin: auto;
 	 padding-bottom: 20px;
+}
+
+#v0 {
+	display: block;
+	width: 800px;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+
+.comments{
+	display: 550px;	
+	width: 800px;
+	margin: 0 auto;
+	padding: 10px;
 }
 
 svg {

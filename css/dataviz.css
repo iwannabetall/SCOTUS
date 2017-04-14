@@ -27,23 +27,37 @@ h3 {
 }
 
 h2 {
-	padding-bottom: 10px;
+	padding-bottom: 0px;
 	text-align: center;
 }
 
+.repub{
+	color: red;
+}
+.dem{
+	color: blue;
+}
+.mixed{
+	color: 	#9400D3;
+}
+
 #mainChart{
-	width: 805px;
+	width: 1000px;
 	margin: auto;
 }
 #filterContainer{
 	width: 80%;
 	margin: auto;
-	padding-bottom: 20px;
+}
+#legendbox{
+	 width: 550px;
+	 margin: auto;
+	 padding-bottom: 20px;
 }
 
 svg {
-	width: 100%;   
-    height:100%;
+	width: 1000px;   
+    height:800px;
     margin:0px;
     padding:0px;
 }

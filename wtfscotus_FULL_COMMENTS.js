@@ -1,3 +1,6 @@
+var initialCategory = "Criminal Procedure";
+var initialYear = 2015; 
+
 //data
 var justicedata = justicedata;
 var dataset_agg = scotus;
@@ -5,11 +8,30 @@ var dataset_agg = scotus;
 var dataset_byissue = scotus_byissue;
 
 function wipePage() {
-	var plot = document.getElementById("mainChart")	
+	var plot = document.getElementById("mainChart")
+	console.log(plot)
 	if (plot.hasChildNodes()){
 		plot.removeChild(plot.childNodes[0])
 	}
 }
+
+//OOHHHHH this is how you write a function and call it by object.visualLength();
+// String.prototype.visualLength = function()  
+// {
+//     var ruler = $("ruler");
+//     ruler.innerHTML = this;
+//     return ruler.offsetWidth;
+// // }
+// function pxLength(text)  
+// {
+//     var ruler = document.getElementById("ruler")
+//     console.log(ruler)
+//     ruler.innerHTML = text;
+//     console.log(ruler)
+//     ruler = document.getElementById("ruler")
+//     console.log(ruler)
+//     return ruler.clientWidth;
+// }
 
 //find how much to shift the label/axis down by based on max length of justice name
 function getDownShiftAmt(elements){
@@ -26,8 +48,18 @@ function getDownShiftAmt(elements){
 		} 
 	}
 
+	//how to get with javascript
+	// var el = document.getElementsByClassName(idtag);  
+	// var max_width = 0;	
+	// for (i = 0; i < el.length; i++){
+	// 	// console.log(el[i].clientWidth)  
+	// 	if (el[i].clientWidth > max_width){			
+	// 		max_width = el[i].clientWidth;		
+	// 	}		
+	// }
 	return max_width;
 }
+
 
 function getChecked(){
 	
@@ -44,8 +76,10 @@ function getChecked(){
 
 }
 
+
 function processData(startyear, endyear) {
 	
+	console.log(startyear)
 	if (!startyear){		
 		var checked = getChecked();
 		var startyear = checked.startyear;
@@ -53,8 +87,10 @@ function processData(startyear, endyear) {
 		var ChosenCategory = checked.category;	
 	}
 	
+	console.log(startyear)
+	// console.log(endyear)
 	var ChosenCategory = document.getElementById("filterSelect").value;
-
+	// console.log(ChosenCategory)
 	//pick data to use depending on chosen category 
 	if (ChosenCategory == "All"){
 		var dataset = dataset_agg;
@@ -86,11 +122,13 @@ function processData(startyear, endyear) {
 }
 
 function initVis(databyyear, ChosenCategory){
-		
+	
+	// console.log(databyyear)
 	var databy_Jpair = d3.nest()
 		//get one of each year for every Justice pairing, need to calculate total rate for period of years 
 		.key(function(d) { return d.J_id;})				
-		.rollup(function(Jpaired,i) {			
+		.rollup(function(Jpaired,i) {
+			// console.log(Jpaired)
 			//Jpaired = row of data with same J_id
 			//can use the first obj in array b/c it should be all objects of the same J_id
 			var J1name = Jpaired[0].J1name;
@@ -105,7 +143,8 @@ function initVis(databyyear, ChosenCategory){
 		})
 			return {J1name: J1name, J2name: J2name, Case_Count: totalopps, Total_Votes: totalvotes, ColorValue: ColorValue};
 			})
-		.entries(databyyear); 		
+		.entries(databyyear); 
+		// console.log(databy_Jpair); 	
 
 	// //WHAT SHOULD SCALE BE?!
 	// var max_freq = d3.max(databyyear, function(d) { return d.freq; });
@@ -128,6 +167,8 @@ function initVis(databyyear, ChosenCategory){
 	var J_unique = J_list.filter(function(itm, i, J_list){
 		return i == J_list.indexOf(itm);
 	});
+	// J_unique.sort()  //sort list 
+	console.log(J_unique)
 	//get the corresponding segal cover scores, sort justice list based on SC score	
 	
 	J_SCscore = []   //Segal Cover Score 
@@ -140,6 +181,7 @@ function initVis(databyyear, ChosenCategory){
 
 	//sort zip of unique justices based on SC score, in 2nd column
 	J_unique_SC.sort(function(a, b){
+		// console.log(a[1] - b[1]); 
 		return a[1] - b[1]});
 
 	//redo order of J_unique based on SC scores
@@ -151,22 +193,41 @@ function initVis(databyyear, ChosenCategory){
 	
 	//using order of inc/dec SC scores, 
 	//get index of prez that appointed justice and their party and make into object with list of justices
+
 	J_party = []  //president's party 
 	J_prez = []
-	// J_name = [] //sanity check passed -- names match J_unique
+	J_name = [] //sanity check passed -- names match J_unique
 	J_lastname = [] 
 	
 	for (i = 0; i < J_unique.length; i++){
 		pos = justicedata.map(function(d) { return d.justiceName; }).indexOf(J_unique[i]);	
 		J_prez.push(justicedata[pos].President)
-		// J_name.push(justicedata[pos].justiceName)
+		J_name.push(justicedata[pos].justiceName)
 		J_party.push(justicedata[pos].PresidentParty)
 		J_lastname.push(justicedata[pos].lastName)	
-	}	
+	}
+	// J_prez_party = d3.zip(J_prez, J_party)
 	J_unique_prez = d3.zip(J_unique, J_prez)   
 	J_unique_party = d3.zip(J_unique, J_party)
 	J_unique_lastname = d3.zip(J_unique, J_lastname)	
 
+	
+	//get unique list of prez appointing for nominating prez list
+	// var J_prez_unique = J_prez.filter(function(itm, i, J_prez){
+	// 	return i == J_prez.indexOf(itm);
+	// });
+	//get prez' party 
+	// J_prezparty_unique = []
+	// for (i = 0; i < J_prez_unique.length; i++){
+	// 	pos = J_prez.indexOf(J_prez_unique[i]);	
+	// 	J_prezparty_unique.push(J_party[pos])
+	// }
+
+	// J_prez_party = d3.zip(J_prez_unique, J_prezparty_unique)
+
+	// console.log(J_prez_unique)
+	// console.log(J_prezparty_unique)
+	// console.log(J_prez_party)
 	//Width and height
 	var w = 805;  //needs to be 805 to fit eisenhower in corner on svg
  	var h = 800;
@@ -381,6 +442,29 @@ function initVis(databyyear, ChosenCategory){
 	   	.style("stroke", "black")
 		.on("mouseover", function(d){ tip2.show(d); })
 		.on("mouseout", function(d){ tip2.hide(d); });	
+
+
+	//add label of prez who appointed them 
+	// var diag = svg.append("g").selectAll("text")
+	// 	.data(J_unique_prez)
+	// 	.enter()
+	// 	.append("text");
+
+	// diag
+	// 	.attr("x", function(d, i) {
+	//    		//want lower triangular --switch max and min if want upper triangular
+	//    		return 2 + labelpadding + downshiftAmt + cellsize * i; 
+	//    })
+	//    .attr("y",  function(d, i) {   	   		
+	//    		return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5); 
+	//    	})
+	//    .text(function(d) { 
+	//    		return d[1]
+	// 	})
+	//    .style("font-size", fontsize)
+	//    .attr("dy","0.35em");  //center text vertically
+
+	// diag.exit().remove();
 	
 	// justice labels -- vertical axis 
 	var J1text = svg.append("g").selectAll("text")
@@ -466,7 +550,7 @@ function initVis(databyyear, ChosenCategory){
 		.on("mouseout", function(d,i) { 
 			var J_el = document.getElementById(d[0] + "_" + J_prez[i]);
 			J_el.style.fontWeight = 'normal';	
-			J_el.style.fontSize = fontsizevalue;		
+			J_el.style.fontSize = fontsizevalue;	
 
 			var prez_el = document.getElementById("Prez" + J_prez[i]);
 			prez_el.style.fontWeight = 'normal';
@@ -474,7 +558,13 @@ function initVis(databyyear, ChosenCategory){
 			prez_el.style.textDecoration = 'none';
 		});
 
-	//LEGEND--linear color gradient 
+	//LEGEND--linear gradient 
+	var legendbox = d3.select("#legend")
+		.attr('width', 240)
+		.attr('height', 200)
+		.attr("x", 0)
+		.attr("y", 0);
+
 	var defs = svg.append("defs");
 
 	var linearGradient = defs.append("linearGradient")
@@ -487,6 +577,16 @@ function initVis(databyyear, ChosenCategory){
 	    .attr("x2", "100%")
 	    .attr("y2", "0%");
 
+	// linearGradient.selectAll("stop")
+	// 	.data([{offset: "0%", color: "white"},
+	// 	 {offset: "100%", color: "blue"}],
+	// 	 [{offset: "0%", color: "white"},
+	// 	 {offset: "100%", color: "red"}])
+	// 	.enter().append("stop")
+	// 	.attr("offset", function(d,i) { console.log(d); return d[i].offset})
+	// 	.attr("stop-color", function(d) {
+	// 		return d.color;
+	// 	})
 	//define gradient -- need stop element and its 3 attributes
 	//start color
 	linearGradient.append("stop")
@@ -585,5 +685,85 @@ function initVis(databyyear, ChosenCategory){
 			}
 				
 		});
+
+	// svg.selectAll("prez_label")
+	// 	.data()
+	// 	.on("mouseover", function(d){ tip2.show(d); })
+	// 	.on("mouseout", function(d){ tip2.hide(d); });	
+
+
+	// //second legend
+	// var linearGradientB = defs.append("linearGradient")
+	// 	.attr("id", "linear-gradient-blue");
+
+	// //make horizontal gradient 
+	// linearGradientB
+	// 	.attr("x1", "0%")
+	//     .attr("y1", "0%")
+	//     .attr("x2", "100%")
+	//     .attr("y2", "0%");
+
+ //    linearGradientB.append("stop")
+	// 	.attr("offset", "0%")
+	// 	.attr("stop-color", "white");
+
+	// //stop color 
+	// linearGradientB.append("stop")
+	// 	.attr("offset", "100%")
+	// 	.attr("stop-color", "blue");
+
+	// svg.append("rect")
+	// 	.attr("width", 200)
+	// 	.attr("height", 20)
+	// 	.attr("x", 300)		
+	// 	.style("fill", "url(#linear-gradient-blue");
+
+
+	
+	// var legend = d3.select("#legend").selectAll(".")
+
+
+
+
+	//do i want to add this into the squares themselves? i'd have to repeat this too 
+	//probably not because it makes the tool tip not functional where the text is, even when the text is 0 opacity
+	// var rate_text = svg.append("g")
+	// 	.selectAll("text")
+	// 		.data(databy_Jpair)
+	// 		.enter()
+	// 		.append("text");
+
+	// rate_text
+	// 	.attr("class", "rate_text")	
+	// 	.attr("id", function (d,i) { 
+	//   	// return d.J1name + "_" + d.J2name;  does not work b/c order of data is random
+	//   	//must use J_unique to give id names
+	//   	return J_unique[J_unique.indexOf(d.value.J2name)] + "_" + J_unique[J_unique.indexOf(d.value.J1name)] + "rate_text";	  
+	// 	})
+	// 	.attr("x", function(d, i) {
+	//    		//want lower triangular --switch max and min if want upper triangular
+	//    		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw	   		
+	//    		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	//    		return labelpadding + downshiftAmt + cellsize * (1 + x_coor) - (cellsize * 0.5) - 14;
+	//    		// return 0;
+	//    })
+	//    .attr("y",  function(d, i) {   
+	//    		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));
+	//    		return labelpadding + downshiftAmt + cellsize * (1 + y_coor) - (cellsize * 0.5);
+	//    	})
+	//    // .attr("text-anchor", "middle")  // 
+	//    .style('opacity', 0)	   
+	//    .text(function(d) {
+	//    		if (d.value.Case_Count > 0)
+	//    		{
+	//    			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	//    		} else {
+	//    			var agree_rate = 0;
+	//    		}
+	//    		return Math.round(agree_rate * 100) + "%";
+	//    	})
+	//    	.attr("dy","0.35em");  //center text vertically;
+
+	// rate_text.exit().remove();
 
 }

@@ -3,7 +3,7 @@ import numpy as np
 import os
 import json 
 
-#origdata = pd.read_csv("SCDB_2016_01_justiceCentered_Vote.csv", sep=",")
+# origdata = pd.read_csv("SCDB_2016_01_justiceCentered_Vote.csv", sep=",")
 origdata = pd.read_csv("SCOTUSPartyTagged.csv", sep = ',')  #tagged with justice info 
 def main():	
 	years = range(1946,2016) 
@@ -20,7 +20,10 @@ def main():
 		newvoteid = "-".join(vote_id_list)  
 		voteid.append(newvoteid)
 		if (docket_id_list[len(docket_id_list)-1] == '01'):
-			keep.append(1)
+			if (not np.isnan(origdata["vote"][i])):
+				keep.append(1)
+			else:
+				keep.append(0)
 		else:
 			keep.append(0)
 	origdata["keep"] = keep  #append colm to df
@@ -90,7 +93,7 @@ def main():
 				casedatabyvoteid = case_data.loc[case_data["newvoteid"] == casevoteid]
 				# print caseissue
 				caseissuearea  = int(case_data["issueArea"].iloc[0])  #get first value of case issue area
-				majority = list(set(casedatabyvoteid.loc[(case_data["vote"] <= 4) & (casedatabyvoteid["vote"] != 2)]["justice"]))  #justices who voted with majority, ie vote = 1, 3, 4 
+				majority = list(set(casedatabyvoteid.loc[(case_data["vote"] <= 5) & (casedatabyvoteid["vote"] != 2)]["justice"]))  #justices who voted with majority, ie vote = 1, 3, 4 
 				majority.sort()  
 				dissent = list(set(casedatabyvoteid.loc[((case_data["vote"] == 2) | (casedatabyvoteid["vote"] == 6) | (casedatabyvoteid["vote"] == 7))]["justice"]))
 				dissent.sort()

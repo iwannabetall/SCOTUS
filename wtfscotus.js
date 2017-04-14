@@ -1,7 +1,6 @@
 //data
 var justicedata = justicedata;
 var dataset_agg = scotus;
-// var dataset = scotus;
 var dataset_byissue = scotus_byissue;
 
 function wipePage() {
@@ -169,9 +168,9 @@ function initVis(databyyear, ChosenCategory){
 
 	//Width and height
 	var w = 805;  //needs to be 805 to fit eisenhower in corner on svg
- 	var h = 800;
+ 	var h = 720;
 	var barPadding = 5;
-	var cellsize = 650/J_unique.length;
+	var cellsize = 600/J_unique.length;
 	var labelpadding = 25;	
 	var fontsize = "18px";
 	var fontsizevalue = 18;  //initial font size

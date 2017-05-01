@@ -51,3 +51,5 @@ d[dems, "ColorValue"] = 1
 d[repubs, "ColorValue"] = -1
 finalfinal = merge(d,issues, by.x = "issueArea", by.y = "Value")
 write.csv(finalfinal, file="D3_ByIssueFinal.csv")
+
+data = read.csv(file="D3_ByIssueFinal.csv")

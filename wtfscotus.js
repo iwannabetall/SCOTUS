@@ -82,6 +82,7 @@ function processData(startyear, endyear) {
 	} 
 
 	initVis(scdata_year, ChosenCategory)
+	// console.log(scdata_year)
 }
 
 function initVis(databyyear, ChosenCategory){
@@ -103,9 +104,10 @@ function initVis(databyyear, ChosenCategory){
 			return g.Case_Opps; 
 		})
 			return {J1name: J1name, J2name: J2name, Case_Count: totalopps, Total_Votes: totalvotes, ColorValue: ColorValue};
-			})
-		.entries(databyyear); 		
+		})
+		.entries(databyyear); 	
 
+		console.log(databy_Jpair)	
 	// //WHAT SHOULD SCALE BE?!
 	// var max_freq = d3.max(databyyear, function(d) { return d.freq; });
 	// var min_freq = d3.min(databyyear, function(d) { return d.freq; });
@@ -139,7 +141,8 @@ function initVis(databyyear, ChosenCategory){
 
 	//sort zip of unique justices based on SC score, in 2nd column
 	J_unique_SC.sort(function(a, b){
-		return a[1] - b[1]});
+		return a[1] - b[1]
+	});
 
 	//redo order of J_unique based on SC scores
 	J_unique = []
@@ -164,7 +167,9 @@ function initVis(databyyear, ChosenCategory){
 	}	
 	J_unique_prez = d3.zip(J_unique, J_prez)   
 	J_unique_party = d3.zip(J_unique, J_party)
-	J_unique_lastname = d3.zip(J_unique, J_lastname)	
+	J_unique_lastname = d3.zip(J_lastname, J_party)	
+	// console.log(J_lastname)
+	// console.log(J_unique)
 
 	//Width and height
 	var w = 805;  //needs to be 805 to fit eisenhower in corner on svg
@@ -190,7 +195,7 @@ function initVis(databyyear, ChosenCategory){
 	}
 
 	//how much to shift boxes/labels by based on max pixel length of text
-	var downshiftAmt = getDownShiftAmt(J_unique)
+	var downshiftAmt = getDownShiftAmt(J_lastname)
 	
 	//Create SVG element
 	var svg = d3.select("#mainChart")
@@ -215,10 +220,10 @@ function initVis(databyyear, ChosenCategory){
 			if (d.value.Case_Count > 0){
 
 				if (ChosenCategory != "All"){					
-					var tooltiptext = J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " voted together on "
+					var tooltiptext = J_lastname[tooltip_x_coor] + " and " + J_lastname[tooltip_y_coor]	+ " voted together on "
 					+ percent_rate + "<br> of the time regarding " + ChosenCategory + ".  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
 				} else {
-					var tooltiptext = J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " voted together "
+					var tooltiptext = J_lastname[tooltip_x_coor] + " and " + J_lastname[tooltip_y_coor]	+ " voted together "
 					+ percent_rate + "<br> of the time.  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
 				}
 			} else {
@@ -243,20 +248,46 @@ function initVis(databyyear, ChosenCategory){
 	  	return boxid;
 		})
 	   .attr("x", function(d, i) {
+	   		if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	   		 
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
-	   		// console.log(d)
+	   		// console.log(d)	   	
 	   		var x_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
-	   		return labelpadding + downshiftAmt + cellsize * (x_coor);
+	   		return labelpadding + downshiftAmt + cellsize * (x_coor) + (cellsize - agree_rate*cellsize)/2;
 
 	   })
 	   .attr("y",  function(d, i) {   
+	   		if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}		
 	   		var y_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
 	   		// console.log(labelpadding + 100 + cellsize * (1 + y_coor));
-	   		return labelpadding + downshiftAmt + cellsize * (y_coor);
+	   		return labelpadding + downshiftAmt + cellsize * (y_coor) + (cellsize - agree_rate*cellsize)/2;
 	   	})
-	   .attr("width", cellsize)
-	   .attr("height", cellsize)	   
+	  .attr("width", function(d) {
+			if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	   		 
+	   		return agree_rate * cellsize;
+
+	   })
+	   .attr("height", function(d) {
+			if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	   		 
+	   		return agree_rate * cellsize;
+
+	   })		   
 	   .attr('fill', function(d,i) { 	   
 	   		//color the blocks based on how they voted with a diff judge 
 	   		//get rate of agreement 
@@ -315,10 +346,13 @@ function initVis(databyyear, ChosenCategory){
 			if (d.value.Case_Count > 0){
 
 				if (ChosenCategory != "All"){					
-					var tooltiptext = J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " voted together on "
+					console.log(J_unique_lastname[tooltip_x_coor])
+					var tooltiptext = J_lastname[tooltip_x_coor] + " and " + J_lastname[tooltip_y_coor]	+ " voted together on "
 					+ percent_rate + "<br> of the time regarding " + ChosenCategory + ".  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
+
+					// console.log(tooltiptext)
 				} else {
-					var tooltiptext = J_unique[tooltip_x_coor] + " and " + J_unique[tooltip_y_coor]	+ " voted together "
+					var tooltiptext = J_lastname[tooltip_x_coor] + " and " + J_lastname[tooltip_y_coor]	+ " voted together "
 					+ percent_rate + "<br> of the time.  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
 				}
 			} else {
@@ -343,20 +377,47 @@ function initVis(databyyear, ChosenCategory){
 	  	return boxid;
 		})
 	   .attr("x", function(d, i) {
+	   		if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	 
 	   		//want lower triangular --switch max and min if want upper triangular
 	   		//get index of unique list (ie x or y loc) of justices of each justice to know where to draw
 	   		// console.log(d)
+	   		//center the squares
 	   		var x_coor = Math.max(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
-	   		return labelpadding + downshiftAmt + cellsize * (x_coor);
+	   		return labelpadding + downshiftAmt + cellsize * (x_coor) + (cellsize - agree_rate*cellsize)/2;
 
 	   })
 	   .attr("y",  function(d, i) {   
+	   		if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	 
 	   		var y_coor = Math.min(J_unique.indexOf(d.value.J1name), J_unique.indexOf(d.value.J2name));	   		
 	   		// console.log(labelpadding + 100 + cellsize * (1 + y_coor));
-	   		return labelpadding + downshiftAmt + cellsize * (y_coor);
+	   		return labelpadding + downshiftAmt + cellsize * (y_coor) + (cellsize - agree_rate*cellsize)/2;
 	   	})
-	   .attr("width", cellsize)
-	   .attr("height", cellsize)	   
+	   .attr("width", function(d) {
+			if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	   		 
+	   		return agree_rate * cellsize;
+
+	   })
+	   .attr("height", function(d) {
+			if (d.value.Case_Count > 0){
+	   			var agree_rate = d.value.Total_Votes/d.value.Case_Count;
+	   		} else {
+	   			var agree_rate = 0;
+	   		}	   		 
+	   		return agree_rate * cellsize;
+
+	   })	   
 	   .attr('fill', function(d,i) { 	   
 	   		//color the blocks based on how they voted with a diff judge 
 	   		//get rate of agreement 
@@ -385,7 +446,7 @@ function initVis(databyyear, ChosenCategory){
 	
 	// justice labels -- vertical axis 
 	var J1text = svg.append("g").selectAll("text")
-		.data(J_unique_party)
+		.data(J_unique_lastname)
 		.enter()
 		.append("text");
 
@@ -417,7 +478,16 @@ function initVis(databyyear, ChosenCategory){
 			prez_el.style.fontWeight = 'bold';
 			prez_el.style.fontSize = '130%';	
 			prez_el.style.textDecoration = 'underline';
-		})
+
+			//hide all other presidents except appointing president when hover over justice
+			var prezes = document.getElementsByClassName("appointingPrez");
+			for (j=0; j<prezes.length; j++){
+				if (prezes[j].textContent != J_prez[i]){
+					prezes[j].style.opacity = '0';
+				}				
+			}
+			
+		})	
 		.on("mouseout", function(d,i) { 
 			var J_el = document.getElementById("J1_" + d[0] + "_" + J_prez[i]);
 			J_el.style.fontWeight = 'normal';	
@@ -427,23 +497,32 @@ function initVis(databyyear, ChosenCategory){
 			prez_el.style.fontWeight = 'normal';
 			prez_el.style.fontSize = '100%';
 			prez_el.style.textDecoration = 'none';
+
+			//make all justices reappear
+			var prezes = document.getElementsByClassName("appointingPrez");
+			for (j=0; j<prezes.length; j++){
+					prezes[j].style.opacity = '1';			
+			}
+
 		});
 
 	J1text.exit().remove();
 	//x axis--rotated labels 
 	var J2text = svg.append("g")
 		.selectAll("text")
-			.data(J_unique_party)
+			.data(J_unique_lastname)
 			.enter()
 			.append("text");
 //wtf is going on with the x and y being swapped -- b/c i transformed? 
 	J2text		
 		.attr("class", function(d,i) { return J_prez[i];})
 		.attr("id", function(d,i) { return d[0] + "_" + J_prez[i];})
+		// .attr("x", function(d, i) {  return labelpadding + cellsize * (1 + i);  })
 		.attr("x", 0)
 		.attr("y", function(d, i) {  return labelpadding + downshiftAmt + cellsize * (1 + i) - (cellsize * 0.5 );  })
 		.style("text-anchor", "end")
-		.attr("transform", "rotate(-90)")
+		// .attr("transform", function(d) { return "rotate(-65)" })
+		.attr("transform", function(d) { return "rotate(-90)" })
 		.text(function(d){ return d[0]; })
 		.style("fill", function(d) {  
 			if (d[1] == "D"){
@@ -463,6 +542,15 @@ function initVis(databyyear, ChosenCategory){
 			prez_el.style.fontWeight = 'bold';
 			prez_el.style.fontSize = '130%';	
 			prez_el.style.textDecoration = 'underline';
+
+			//hide all other presidents except appointing president when hover over justice
+			var prezes = document.getElementsByClassName("appointingPrez");
+			for (j=0; j<prezes.length; j++){
+				if (prezes[j].textContent != J_prez[i]){
+					prezes[j].style.opacity = '0';
+				}				
+			}
+
 		})
 		.on("mouseout", function(d,i) { 
 			var J_el = document.getElementById(d[0] + "_" + J_prez[i]);
@@ -473,6 +561,12 @@ function initVis(databyyear, ChosenCategory){
 			prez_el.style.fontWeight = 'normal';
 			prez_el.style.fontSize = '100%';
 			prez_el.style.textDecoration = 'none';
+
+			//make all justices reappear
+			var prezes = document.getElementsByClassName("appointingPrez");
+			for (j=0; j<prezes.length; j++){
+					prezes[j].style.opacity = '1';			
+			}
 		});
 
 	//LEGEND--linear color gradient 
@@ -533,6 +627,7 @@ function initVis(databyyear, ChosenCategory){
 		.attr("id", function(d,i) { var prez = J_prez.filter(function(itm, i, J_prez){ return i == J_prez.indexOf(itm); });			
 			return "Prez" + prez[i];
 		})
+		.attr("class", "appointingPrez")
 		.attr("x", cellsize * J_unique.length + labelpadding + downshiftAmt + legendshift)
 		.attr("y", function(d,i) { 
 			return  downshiftAmt + labelpadding + legendtextshift + 3*legendtextshift + i*22; })
@@ -588,3 +683,4 @@ function initVis(databyyear, ChosenCategory){
 		});
 
 }
+

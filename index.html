@@ -13,6 +13,7 @@
 		<script src="data/scotus_byissue.json"></script>		
 			
 		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic' rel='stylesheet' type='text/css'>	
+		<link rel="stylesheet" type="text/css" href="css/multiline.css">
 		<link rel="stylesheet" type="text/css" href="css/d3-tip.css"/>
 		<link rel="stylesheet" type="text/css" href="css/dataviz.css"/>
 		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
@@ -44,6 +45,7 @@
 			<option value="Privacy">Privacy</option>
 			<option value="Unions">Unions</option>
 			<option value="Economic Activity">Economic Activity</option>
+			<option value="Attorneys">Attorneys</option>
 			<option value="Judicial Power">Judicial Power</option>
 			<option value="Federalism">Federalism</option>
 			<option value="Federal Taxation">Federal Taxation</option>
@@ -78,6 +80,9 @@
     <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
 </video>
 
+	<!-- VIZ DIV-->
+	<div id="mainChart2">
+	</div>
 
 	<div style="margin:auto; width:90%; padding-bottom: 10px;">		
 	<p> Data source: <a href="http://scdb.wustl.edu/index.php">Supreme Court Database</a> <p> 
@@ -88,6 +93,8 @@
 	<script src="jquery.js"></script>		
 	<script src="js/ion.rangeSlider.min.js"></script>		
 	<script src="wtfscotus.js"></script>
+	<script src="js/multiline.js" charset="utf-8"></script>
+
 	<script>
 	      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

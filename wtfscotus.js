@@ -107,7 +107,7 @@ function initVis(databyyear, ChosenCategory){
 		})
 		.entries(databyyear); 	
 
-		console.log(databy_Jpair)	
+		// console.log(databy_Jpair)	
 	// //WHAT SHOULD SCALE BE?!
 	// var max_freq = d3.max(databyyear, function(d) { return d.freq; });
 	// var min_freq = d3.min(databyyear, function(d) { return d.freq; });
@@ -173,14 +173,14 @@ function initVis(databyyear, ChosenCategory){
 
 	//Width and height
 	var w = 805;  //needs to be 805 to fit eisenhower in corner on svg
- 	var h = 720;  //for purposes of screenshotting 
- 	// var h = 800;
+ 	// var h = 720;  //for purposes of screenshotting 
+ 	var h = 750;
 	var barPadding = 5;
-	// var cellsize = 630/J_unique.length;
-	var cellsize = 600/J_unique.length;
+	var cellsize = 630/J_unique.length;
+	// var cellsize = 600/J_unique.length;
 	var labelpadding = 25;	
-	var fontsize = "18px";
-	var fontsizevalue = 18;  //initial font size
+	var fontsize = "20px";
+	var fontsizevalue = 20;  //initial font size
 	//change font based on cell size
 	if (cellsize < 33){		
 		fontsizevalue = 16;
@@ -188,11 +188,11 @@ function initVis(databyyear, ChosenCategory){
 		fontsize = fontsizevalue + "px";
 	}
 
-	if (cellsize < 22){		
-		fontsizevalue = cellsize * 0.7;
-		fontsizevalue = Math.round(fontsizevalue)
-		fontsize = fontsizevalue + "px";
-	}
+	// if (cellsize < 22){		
+	// 	fontsizevalue = cellsize * 0.7;
+	// 	fontsizevalue = Math.round(fontsizevalue)
+	// 	fontsize = fontsizevalue + "px";
+	// }
 
 	//how much to shift boxes/labels by based on max pixel length of text
 	var downshiftAmt = getDownShiftAmt(J_lastname)
@@ -346,7 +346,7 @@ function initVis(databyyear, ChosenCategory){
 			if (d.value.Case_Count > 0){
 
 				if (ChosenCategory != "All"){					
-					console.log(J_unique_lastname[tooltip_x_coor])
+					// console.log(J_unique_lastname[tooltip_x_coor])
 					var tooltiptext = J_lastname[tooltip_x_coor] + " and " + J_lastname[tooltip_y_coor]	+ " voted together on "
 					+ percent_rate + "<br> of the time regarding " + ChosenCategory + ".  (" + d.value.Total_Votes + "/" + d.value.Case_Count + ")";
 

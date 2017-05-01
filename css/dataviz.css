@@ -11,6 +11,9 @@ body, p, h1{
 	visibility: hidden; 
 	white-space: nowrap; 
 }
+li{
+	margin: 1em 0;
+}
 
 h1 {
     font-size: 2em;
@@ -48,8 +51,9 @@ h2 {
 #filterContainer{
 	width: 70%;
 	margin: auto;
+	padding-bottom: 20px;
 }
-#legendbox{
+.textbox{
 	 width: 850px;
 	 margin: auto;
 	 padding-bottom: 20px;

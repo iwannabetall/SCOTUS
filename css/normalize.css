@@ -18,6 +18,7 @@ html {
 
 div, p, body {
     font-family: "Source Sans Pro", Helvetica, sans-serif; /* 1 */
+    font-size: 18px;
     margin: 0;
 }
 

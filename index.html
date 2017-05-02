@@ -23,11 +23,11 @@
 	    <link rel="stylesheet" type="text/css" href="css/ion.rangeSlider.skinFlat.css" />
 	</head>
 	<body>
-<!-- 		<h1>Supreme Court Justice Voting</h1>		
+		<h1>Supreme Court Justice Voting</h1>		
 	<h3>How Often Justices Voted with Each Other</h3>
 	<div class="textbox"><p>Agreement rate between <span class="repub">Republican-Republican</span>, 
 		<span class="dem"> Democrat-Democrat</span>, and <span class="mixed">mixed Republican-Democratic</span> justice pairs.  Justices are sorted in decreasing perception of conservativeness, as measured by the <a href="https://en.wikipedia.org/wiki/Segal%E2%80%93Cover_score" target="_blank">Segal-Cover score</a>.</p>
-	</div> -->
+	</div>
 
 	<!--Slider -->
 <div style="position: relative; padding-top:5px; width: 85%; margin:auto;">
@@ -44,8 +44,8 @@
 	<div id="filterContainer">		
 		<select id="filterSelect" onchange="wipePage();processData();">
 			<option value="All">All</option>
-			<option value="Rights">Individual Rights (Aggregate)</option>
-			<option value="Econ">Economic/Judicial (Aggregate)</option>
+			<option value="Individual Rights">Individual Rights (Aggregate)</option>
+			<option value="Economic/Judicial">Economic/Judicial (Aggregate)</option>
 			<option value="Criminal Procedure">Criminal Procedure</option>
 			<option value="Civil Rights">Civil Rights</option>
 			<option value="First Amendment">First Amendment</option>
@@ -64,10 +64,11 @@
 
 	<div id="filterContainer">		
 
-		<div id="YearPicker"> 	
+<!-- 	for screen shots for GIF
+	<div id="YearPicker"> 	
 		</div>
 	</div>	 
-
+ -->
 
 	<!-- VIZ DIV-->
 	<div id="mainChart"></div>	
@@ -75,11 +76,17 @@
 	<br>
 
 		<h3>The Supreme Court Over Time</h3>
-<div class="comments"> <p>Drag the slider to see how the Court has changed year-by-year.</p> </div>
+<div class="comments"> <p>Drag the slider to see how the Court has changed year-by-year on individual rights.</p> </div>
 
 	<!-- VIZ of time lapse of SC-->
 <video id="v0" controls tabindex="0" autobuffer preload>
-    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="scotus40s.mp4"></source>
+    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="SCOTUSIndRights.mp4"></source>
+    <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
+</video>
+<br>
+<div class="comments"> How the Court has changed over time for economic/judicial case issues.</div>
+<video id="v0" controls tabindex="0" autobuffer preload>
+    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="SCOTUS_Econ.mp4"></source>
     <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
 </video>
 	<div class="textbox" id="tidbits" ><h3>Supreme Court Tidbits</h3>

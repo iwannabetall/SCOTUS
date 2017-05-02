@@ -62,10 +62,10 @@ function processData(startyear, endyear) {
 	if (ChosenCategory == "All"){
 		var dataset = dataset_agg;
 	}
-	else if (ChosenCategory == 'Rights'){
+	else if (ChosenCategory == 'Individual Rights'){
 		var dataset = data_civil;
 	}
-	else if (ChosenCategory == 'Econ') {
+	else if (ChosenCategory == 'Economic/Judicial') {
 		var dataset = data_econ;
 	}
 	else if (ChosenCategory != "All") {
@@ -81,7 +81,7 @@ function processData(startyear, endyear) {
 
 	});
 	//filter data if don't select all or an aggregate, aggregate
-	if (['All', 'Rights', 'Econ'].indexOf(ChosenCategory) < 0){
+	if (['All', 'Individual Rights', 'Economic/Judicial'].indexOf(ChosenCategory) < 0){
 		scdata_year = scdata_year.filter(function(d) {
 			//return all data matching that category
 			//for loop for if decide to let ppl select more than one category...doesnt make sense tho

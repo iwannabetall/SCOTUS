@@ -1,7 +1,11 @@
 //data
 var justicedata = justicedata;
 var dataset_agg = scotus;
+var data_civil = civil_agg;  //aggregate of 5 topics: civil rights, criminal procedure, privacy, first amendment, and due process
+var data_econ = scotus_econ;  //agg of economic/legal procedures
 var dataset_byissue = scotus_byissue;
+// var dataset_byissue = civil;
+// var dataset_byissue = econ;
 
 function wipePage() {
 	var plot = document.getElementById("mainChart")	
@@ -58,6 +62,12 @@ function processData(startyear, endyear) {
 	if (ChosenCategory == "All"){
 		var dataset = dataset_agg;
 	}
+	else if (ChosenCategory == 'Rights'){
+		var dataset = data_civil;
+	}
+	else if (ChosenCategory == 'Econ') {
+		var dataset = data_econ;
+	}
 	else if (ChosenCategory != "All") {
 		var dataset = dataset_byissue;	
 	}
@@ -70,8 +80,8 @@ function processData(startyear, endyear) {
 		}
 
 	});
-		//filter data if don't select all, aggregate if do 
-	if (ChosenCategory != "All"){
+	//filter data if don't select all or an aggregate, aggregate
+	if (['All', 'Rights', 'Econ'].indexOf(ChosenCategory) < 0){
 		scdata_year = scdata_year.filter(function(d) {
 			//return all data matching that category
 			//for loop for if decide to let ppl select more than one category...doesnt make sense tho
@@ -179,20 +189,20 @@ function initVis(databyyear, ChosenCategory){
 	var cellsize = 630/J_unique.length;
 	// var cellsize = 600/J_unique.length;
 	var labelpadding = 25;	
-	var fontsize = "20px";
+	var fontsize = "22px";
 	var fontsizevalue = 20;  //initial font size
 	//change font based on cell size
 	if (cellsize < 33){		
-		fontsizevalue = 16;
-		fontsizevalue = Math.round(fontsizevalue)
+		fontsizevalue = 20;
+		// fontsizevalue = Math.round(fontsizevalue)
 		fontsize = fontsizevalue + "px";
 	}
 
-	// if (cellsize < 22){		
-	// 	fontsizevalue = cellsize * 0.7;
-	// 	fontsizevalue = Math.round(fontsizevalue)
-	// 	fontsize = fontsizevalue + "px";
-	// }
+	if (cellsize < 22){		
+		fontsizevalue = 17;
+		// fontsizevalue = Math.round(fontsizevalue)
+		fontsize = fontsizevalue + "px";
+	}
 
 	//how much to shift boxes/labels by based on max pixel length of text
 	var downshiftAmt = getDownShiftAmt(J_lastname)

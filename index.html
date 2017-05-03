@@ -25,8 +25,10 @@
 	<body>
 		<h1>Supreme Court Justice Voting</h1>		
 	<h3>How Often Justices Voted with Each Other</h3>
-	<div class="textbox"><p>Agreement rate between <span class="repub">Republican-Republican</span>, 
-		<span class="dem"> Democrat-Democrat</span>, and <span class="mixed">mixed Republican-Democratic</span> justice pairs.  Justices are sorted in decreasing perception of conservativeness, as measured by the <a href="https://en.wikipedia.org/wiki/Segal%E2%80%93Cover_score" target="_blank">Segal-Cover score</a>.</p>
+	<div class="textbox">
+		<p>Agreement rate between <span class="repub">Republican-Republican</span>, 
+		<span class="dem"> Democrat-Democrat</span>, and <span class="mixed">mixed Republican-Democratic</span> justice pairs.  Justices are sorted in decreasing perception of conservativeness, as measured by the <a href="https://en.wikipedia.org/wiki/Segal%E2%80%93Cover_score" target="_blank">Segal-Cover score</a>.
+	</p>
 	</div>
 
 	<!--Slider -->
@@ -61,57 +63,73 @@
 		</select>
 	
 	</div>
-
-	<div id="filterContainer">		
-
-<!-- 	for screen shots for GIF
-	<div id="YearPicker"> 	
+	<!-- for screen shots for GIF -->
+	<!-- <div id="YearPicker"> 	
 		</div>
-	</div>	 
- -->
+	</div>	  -->
+
 
 	<!-- VIZ DIV-->
 	<div id="mainChart"></div>	
-	<br>		
+
+	<div class="textbox">		
+	<p>
+		Individual Rights aggregate: Criminal Procedure, Civil Rights, First Amendment, Privacy, and Due Process.  
+	<br> Economic/Judicial aggregate: Federalism, Interstate Relations, Federal Taxation, Judicial Power, Economic 	Activity, Attorneys. 
+	</p><br>
+
+	<p> Data source: <a href="http://scdb.wustl.edu/index.php" target="_blank">Supreme Court Database</a>.  For more details on the topics, please see the SCDB <a href="http://scdb.wustl.edu/documentation.php?var=issue" target="_blank">documentation</a>. <p> 
+	</div>
 	<br>
+		<h3 class='larger'>The Supreme Court Over Time</h3>
+		<h3>Individual Rights vs. Economic/Judicial Case Issues</h3>
 
-		<h3>The Supreme Court Over Time</h3>
-<div class="comments"> <p>Drag the slider to see how the Court has changed year-by-year on individual rights.</p> </div>
+<div class="textbox"> 
+	<p>
+	The most disagreement occurs over matters involving individual rights, with less disagreement over economic or judicial matters.  Play the video or drag the slider to see how the Court has changed year-to-year.
+	</p>
+	<br>
+	<p> Note that lines of full sized boxes likely reflect a small sample size causing a perfect agreement rate. </p> 
+</div>
 
+	<h3 style='text-decoration: underline;'>Individual Rights</h3>
 	<!-- VIZ of time lapse of SC-->
 <video id="v0" controls tabindex="0" autobuffer preload>
-    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="SCOTUSIndRights.mp4"></source>
+    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="scotus_individ.mp4"></source>
     <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
 </video>
 <br>
-<div class="comments"> How the Court has changed over time for economic/judicial case issues.</div>
+
+<h3 style='text-decoration: underline;'>Economic/Judicial</h3>
+
 <video id="v0" controls tabindex="0" autobuffer preload>
-    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="SCOTUS_Econ.mp4"></source>
+    <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="scotus_econ.mp4"></source>
     <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
 </video>
-	<div class="textbox" id="tidbits" ><h3>Supreme Court Tidbits</h3>
+
+
+	<div class="textbox" id="tidbits" ><h3 class='larger'>Supreme Court Tidbits</h3>
 		<ul>
-			<li>Most disagreement between conservative and liberal justices occurs over matters involving individual rights, eg civil rights, the First Amendment, criminal procedures. 	
+			<li>Two of Eisenhower's appointees, Chief Justice Earl Warren and Justice William Brennan, were integral members of a Court that led a wave of liberal decisions that attacked racial segregation and expanded individual rights against government searches.  Eisenhower called his appointments the "biggest damn fool mistake I ever made" and said that they were two of his biggest presidential mistakes.  Check out <a href="http://usatoday30.usatoday.com/news/washington/2005-07-04-defiant-justices_x.htm" target="_blank">this story</a> for more.
 			</li>
-			<li>Two of Eisenhower's appointees, Chief Justice Earl Warren and Justice William Brennan, were integral members of a Court that led a wave of liberal decisions that attacked racial segregation and expanded individual rights against government searches.  Eisenhower called his appointments the "biggest damn fool mistake I ever made" and said that they were two of his biggest presidential mistakes.  Check out <a href="http://usatoday30.usatoday.com/news/washington/2005-07-04-defiant-justices_x.htm">this story</a> for more.
+			<li>Watch Nixon appointee, Harry Blackmun in the individual rights video.  Best known as the author of <span style='font-style: italic;'>Roe v. Wade</span> (1973) decision, Blackmun started his appointment voting closely with the best man at his wedding, Chief Justice Burger, but drifted and frequently voted with liberal Justices Brennan and Marshall in his later years.
+			More on the split <a href="https://en.wikipedia.org/wiki/Harry_Blackmun#Early_years_on_the_Supreme_Court" target="_blank">here</a>.
 			</li>
-			<li> In a <a href="http://www.jstor.org/stable/1229058">tribute</a> to Thurgood Marshall, a former clerk notes that Marshall once described his judicial philosophy as "You do what you think is right and let the law catch up." 	
+			<li> In a <a href="http://www.jstor.org/stable/1229058" target="_blank">tribute</a> to Thurgood Marshall, a former clerk notes that Marshall once described his judicial philosophy as "You do what you think is right and let the law catch up." 	
 			</li>
-			<li><a href="https://en.wikipedia.org/wiki/William_O._Douglas#Personal_life">William Douglas</a> missed most of the 1949 term after he was thrown off a horse and broke 13 ribs.  Later that year, he was also kicked by a horse.
+			<li><a href="https://en.wikipedia.org/wiki/William_O._Douglas#Personal_life" target="_blank">William Douglas</a> missed most of the 1949 term after he was thrown off a horse and broke 13 ribs.  Later that year, he was also kicked by a horse.
 			</li>
-			<li>Clarence Thomas doesn't believe in stare decis, ie following legal precedent.  For more on his eccentric judicial philosophy, check out this NYTimes <a href="http://www.nytimes.com/2011/10/23/opinion/sunday/clarence-thomass-brand-of-judicial-logic.html?_r=1&scp=3&sq=clarence%20thomas&st=cse">piece</a>.	
+			<li>Clarence Thomas doesn't believe in stare decis, ie following legal precedent.  For more on his eccentric judicial philosophy, check out this NYTimes <a href="http://www.nytimes.com/2011/10/23/opinion/sunday/clarence-thomass-brand-of-judicial-logic.html?_r=1&scp=3&sq=clarence%20thomas&st=cse" target="_blank">piece</a>.	
 			</li>
 
 		</ul>
 	</div>
 
 	<!-- VIZ DIV-->
-	<div id="mainChart2">
-	</div>
+<!-- 	<div id="mainChart2">
+	</div> -->
 
-	<div style="margin:auto; width:90%; padding-bottom: 10px;">		
-	<p> Data source: <a href="http://scdb.wustl.edu/index.php">Supreme Court Database</a> <p> 
-	</div>
+
 
 	<!-- Javascript -->
 	<script src="js/gotz-d3-tip.js"></script>
